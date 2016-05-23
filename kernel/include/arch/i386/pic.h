@@ -1,5 +1,5 @@
-#ifndef _CHRONOS_ARCH_I386_PIC_H
-#define _CHRONOS_ARCH_I386_PIC_H
+#ifndef _KERNEL_ARCH_I386_PIC_H
+#define _KERNEL_ARCH_I386_PIC_H
 
 #include <stdint.h>
 

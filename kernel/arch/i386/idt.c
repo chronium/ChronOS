@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <kernel/idt.h>
+#include <arch/i386/idt.h>
 
 #define IDT_TYPE_INTERRUPT 0xE
 #define IDT_TYPE_TRAP 0xF

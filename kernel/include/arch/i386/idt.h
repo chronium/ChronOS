@@ -1,4 +1,5 @@
-#ifndef _CHRONOS_ARCH_I386_IDT_H
+#ifndef _KERNEL_ARCH_I386_IDT_H
+#define _KERNEL_ARCH_I386_IDT_H
 
 void isr0();
 void isr1();

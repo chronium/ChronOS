@@ -3,8 +3,8 @@
 #include <kernel/tty.h>
 
 #if defined(__i386__)
-#include <kernel/idt.h>
-#include <kernel/pic.h>
+#include <arch/i386/idt.h>
+#include <arch/i386/pic.h>
 #endif
 
 #include <multiboot.h>
@@ -23,4 +23,5 @@ void kmain (void) {
   	puts ("IDT initialized");
   	pic_initialize ();
   	puts ("PIC initialized");
+  	asm volatile ("sti");
 }

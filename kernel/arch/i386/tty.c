@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <kernel/vga.h>
+#include <arch/i386/vga.h>
 
 size_t term_row;
 size_t term_col;

@@ -1,7 +1,7 @@
 #include <stdint.h>
 
-#include <kernel/portio.h>
-#include <kernel/pic.h>
+#include <arch/i386/portio.h>
+#include <arch/i386/pic.h>
 
 #define PIC_MASTER 0x20
 #define PIC_SLAVE 0xA0
