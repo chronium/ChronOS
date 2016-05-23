@@ -14,7 +14,7 @@ export BOOTDIR=/boot
 export LIBDIR=$EXEC_PREFIX/lib
 export INCLUDEDIR=$PREFIX/include
 
-export CFLAGS='-O1 -g'
+export CFLAGS='-O0 -g'
 export CPPFLAGS=''
 
 export CC="$CC --sysroot=$PWD/sysroot"

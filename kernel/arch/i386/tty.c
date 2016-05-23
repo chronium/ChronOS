@@ -31,7 +31,7 @@ void term_putentry (char c, uint8_t color, size_t x, size_t y) {
 }
 
 static void term_scroll () {
-	memcpy (term_buff, term_buff, (VGA_HEIGHT - 1) * VGA_WIDTH);
+	memcpy (term_buff, term_buff + (VGA_WIDTH), (VGA_HEIGHT - 1) * VGA_WIDTH);
 	for (size_t x = 0; x < VGA_WIDTH; x++)
 		term_putentry (' ', term_color, x, VGA_HEIGHT - 1);
 }
