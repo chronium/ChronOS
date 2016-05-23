@@ -51,6 +51,8 @@ _start:
   movw $(0x28 | 0x3), %cx
 	ltr %cx
 
+  push %ebx
+  call kearly
   call _init
   call kmain
   cli
