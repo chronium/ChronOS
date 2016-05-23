@@ -23,5 +23,6 @@ void kmain (void) {
   	puts ("IDT initialized");
   	pic_initialize ();
   	puts ("PIC initialized");
-  	asm volatile ("sti");
+  	printf("Test: 1 / 0\n");
+  	int i = 1 / 0;
 }
