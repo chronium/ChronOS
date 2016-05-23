@@ -1,3 +1,26 @@
+#include <stdio.h>
+
+#include <kernel/tty.h>
+
+#if defined(__i386__)
+#include <kernel/idt.h>
+#include <kernel/pic.h>
+#endif
+
+#include <multiboot.h>
+
+multiboot_info_t *mboot_info;
+
+void kearly (multiboot_info_t *_mboot_info) {
+	mboot_info = _mboot_info;
+
+	term_init ();
+}
+
 void kmain (void) {
-  *((int*)0xb8000)=0x07690748;
+	printf ("Hello World!\n");
+  	idt_initialize ();
+  	puts ("IDT initialized");
+  	pic_initialize ();
+  	puts ("PIC initialized");
 }
