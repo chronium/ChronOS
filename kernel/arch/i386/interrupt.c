@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-#include "pic.h"
+#include <kernel/pic.h>
 
 struct interrupt_context {
 	uint32_t cr2;

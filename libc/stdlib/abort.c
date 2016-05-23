@@ -8,7 +8,7 @@ void abort (void) {
 #elif defined (__is_chronos_kernel)
 	// TODO: Implement better kernel panic.
 	printf ("Kernel Panic: abort ()\n");
-	while (1) { }
+	exit (1);
 #else
 	#error "You need to implement abort() in the current freestanding environment."
 #endif
