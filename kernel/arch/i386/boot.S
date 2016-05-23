@@ -20,6 +20,37 @@ stack_top:
 .type _start, @function
 _start:
   movl $stack_top, %esp
+
+  movl $tss, %ecx
+	movw %cx, gdt + 0x28 + 2
+	shrl $16, %ecx
+	movb %cl, gdt + 0x28 + 4
+	shrl $8, %ecx
+	movb %cl, gdt + 0x28 + 7
+
+  subl $6, %esp
+	movw gdt_size_minus_one, %cx
+	movw %cx, 0(%esp)
+	movl $gdt, %ecx
+	movl %ecx, 2(%esp)
+	lgdt 0(%esp)
+	addl $6, %esp
+
+  push $0x08
+	push $1f
+	retf
+1:
+
+  movw $0x10, %cx
+  movw %cx, %ds
+  movw %cx, %es
+  movw %cx, %fs
+  movw %cx, %gs
+  movw %cx, %ss
+
+  movw $(0x28 | 0x3), %cx
+	ltr %cx
+
   call _init
   call kmain
   cli
