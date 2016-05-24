@@ -14,6 +14,8 @@ void abort (void);
 __attribute__ ((__noreturn__))
 void exit (int);
 
+void *malloc (size_t);
+
 #ifdef __cplusplus
 }
 #endif

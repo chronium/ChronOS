@@ -33,11 +33,12 @@ stdio/printf.o \
 stdio/putchar.o \
 stdio/puts.o \
 stdlib/abort.o \
+stdlib/malloc.o \
 string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
 string/memset.o \
-string/strlen.o 
+string/strlen.o
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
@@ -45,7 +46,7 @@ stdlib/exit.o
 
 OBJS:=\
 $(FREEOBJS) \
-$(HOSTEDOBJS) 
+$(HOSTEDOBJS)
 
 LIBK_OBJS:=$(FREEOBJS:.o=.libk.o)
 
