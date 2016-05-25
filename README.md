@@ -10,9 +10,9 @@ To build the OS, you run make which configures, builds the projects, and creates
 make
 qemu-system-i386 -cdrom chronos.iso
 ```
-Or you simply run the qemu make target which builds the project and runs it directly.
+Or you simply run the run make target which builds the project and runs it directly.
 ```sh
-make qemu
+make run
 ```
 
 To build and run directly with QEMU, you can also run the following shell script.
