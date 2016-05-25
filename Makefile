@@ -9,7 +9,7 @@ iso:
 	./iso.sh
 
 run: all
-	qemu-system-$(ARCH) -cdrom chronos.iso
+	qemu-system-$(ARCH) -cdrom chronos.iso -serial stdio
 
 clean:
 	./clean.sh

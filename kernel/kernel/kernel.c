@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <kernel/tty.h>
 #include <kernel/heap.h>
@@ -8,6 +9,7 @@
 #include <arch/i386/idt.h>
 #include <arch/i386/pic.h>
 #include <arch/i386/paging.h>
+#include <arch/i386/serial.h>
 #endif
 
 #include <multiboot.h>
@@ -30,6 +32,9 @@ void kmain (void) {
 	puts ("PIC initialized");
 	paging_initialize ();
 	puts ("Paging initialized");
+	serial_initialize ();
+	puts ("Serial initialized");
+	dev_write (COM1, "Helo Serial World!\n", strlen ("Hello Serial World!\n"), 0);
 #endif
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");

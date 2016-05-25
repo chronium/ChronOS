@@ -34,11 +34,13 @@ stdio/putchar.o \
 stdio/puts.o \
 stdlib/abort.o \
 stdlib/malloc.o \
+stdlib/calloc.o \
 string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
 string/memset.o \
-string/strlen.o
+string/strlen.o \
+string/strdup.o
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \
