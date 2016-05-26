@@ -1,6 +1,3 @@
-HOST?=$(shell ../default-host.sh)
-HOSTARCH:=$(shell ../target-arch.sh $(HOST))
-
 CFLAGS?=-O0 -g
 CPPFLAGS?=
 LDFLAGS?=
