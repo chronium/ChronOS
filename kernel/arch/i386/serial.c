@@ -6,8 +6,6 @@
 #include <arch/i386/serial.h>
 #include <arch/i386/portio.h>
 
-#define COM_PORT  0x3F8
-
 struct device *COM1;
 struct device *COM2;
 struct device *COM3;
