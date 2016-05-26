@@ -15,16 +15,7 @@ Or you simply run the run make target which builds the project and runs it direc
 make run
 ```
 
-To build and run directly with QEMU, you can also run the following shell script.
-```sh
-./qemu.sh
-```
-
 To clean the project you simply run the clean make target like so.
 ```sh
 make clean
-```
-Or manually run the following script.
-```sh
-./clean.sh
 ```
