@@ -9,7 +9,7 @@ EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
 
-CFLAGS:=$(CFLAGS) -Wall -Wextra
+CFLAGS:=$(CFLAGS) -Wall -Wextra -Werror
 CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude
 LIBK_CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel

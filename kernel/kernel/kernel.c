@@ -10,19 +10,22 @@
 #include <arch/i386/pic.h>
 #include <arch/i386/paging.h>
 #include <arch/i386/serial.h>
-#endif
 
-#include <multiboot.h>
+#include <arch/i386/multiboot.h>
 
 multiboot_info_t *mboot_info;
 
 void kearly (multiboot_info_t *_mboot_info) {
 	mboot_info = _mboot_info;
-
 	term_init ();
 	init_kheap (*(uint32_t *)(mboot_info->mods_addr + 4));
 	printf("Heap initialized\n");
 }
+#else
+void kearly (void) {
+	
+}
+#endif
 
 void kmain (void) {
 #if defined(__i386__)
