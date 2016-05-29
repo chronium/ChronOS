@@ -21,7 +21,7 @@ void term_init (void) {
 
 	for (size_t y = 0; y < VGA_HEIGHT; y++)
 		for (size_t x = 0; x < VGA_WIDTH; x++)
-			term_putentry (' ', term_color, x, y);			
+			term_putentry (' ', term_color, x, y);
 }
 
 void term_setcolor (uint8_t color) {

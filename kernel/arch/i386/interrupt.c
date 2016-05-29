@@ -14,7 +14,7 @@ void irq_handler (struct interrupt_context *int_ctx) {
 
 	(void) int_ctx;
 
-	if (irq == 7 && !(pic_read_isr () & (1 << 7))) 
+	if (irq == 7 && !(pic_read_isr () & (1 << 7)))
 		return;
 	if (irq == 15 && !(pic_read_isr () & (1 << 15)))
 		return;
