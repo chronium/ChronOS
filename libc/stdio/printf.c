@@ -42,7 +42,7 @@ int printf (const char * restrict format, ...) {
 			print (format, amount);
 			format += amount;
 			written += amount;
-			continue;	
+			continue;
 		}
 
 		const char *format_begun_at = format;

@@ -15,6 +15,7 @@ __attribute__ ((__noreturn__))
 void exit (int);
 
 void *malloc (size_t);
+void *calloc (size_t, size_t);
 
 #ifdef __cplusplus
 }

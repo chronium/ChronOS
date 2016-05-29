@@ -5,7 +5,7 @@ void *memmove (void *dest, const void *src, size_t n) {
 	char *d = dest;
 	const char *s = src;
 
-	if (d == s) 
+	if (d == s)
 		return d;
 
 	if (s + n <= d || d + n <= s)
@@ -23,7 +23,7 @@ void *memmove (void *dest, const void *src, size_t n) {
 				*(size_t *) d = * (size_t *) s;
 		}
 
-		for (; n; n--) 
+		for (; n; n--)
 			*d++ = *s++;
 	} else {
 		if ((uintptr_t) s % ALIGN == (uintptr_t)d % ALIGN) {
