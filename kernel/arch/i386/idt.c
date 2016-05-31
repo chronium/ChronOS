@@ -40,7 +40,7 @@ void idt_entry (struct idt_entry *entry, void (*handler) (void), uint8_t type, u
 	entry->handler_high = (uintptr_t) handler >> 16 & 0xFFFF;
 }
 
-void idt_initialize () {
+void init_idt () {
 	memset (&idt, 0, sizeof (idt));
 
 	idt_entry (&idt[0], isr0, IDT_TYPE_INTERRUPT, 0x0);

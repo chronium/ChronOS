@@ -22,6 +22,6 @@ struct serial_dev {
 struct device *create_serial (uint16_t, const char *);
 void serial_enable_port (uint16_t);
 
-void serial_initialize ();
+void init_serial ();
 
 #endif

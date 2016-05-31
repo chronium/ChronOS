@@ -15,7 +15,7 @@ static int serial_empty (uint16_t);
 static void serial_putc (uint16_t, char);
 static size_t serial_write (void *, const void *, size_t, uint32_t);
 
-void serial_initialize () {
+void init_serial () {
   COM1 = create_serial (COM1_PORT, "COM1");
   COM2 = create_serial (COM2_PORT, "COM2");
   COM3 = create_serial (COM3_PORT, "COM3");

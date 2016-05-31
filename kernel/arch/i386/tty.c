@@ -2,61 +2,63 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include <arch/i386/vga.h>
 #include <arch/i386/portio.h>
 #include <kernel/tty.h>
 
-size_t term_row;
-size_t term_col;
-uint8_t term_color;
-uint16_t *term_buff;
+#define MAKE_COLOR(FG, BG) FG | BG << 4
+
+static struct textmode *tty;
 
 void term_putentry (char, uint8_t, size_t, size_t);
 
-void term_init (void) {
-	term_row = term_col = 0;
-	term_color = make_color (COLOR_LIGHT_GREY, COLOR_BLACK);
-	term_buff = VGA_MEMORY;
+struct textmode *term_init (struct video *video) {
+	tty = (struct textmode *) malloc (sizeof (struct textmode));
 
-	for (size_t y = 0; y < VGA_HEIGHT; y++)
-		for (size_t x = 0; x < VGA_WIDTH; x++)
-			term_putentry (' ', term_color, x, y);
-}
+	tty->address 	= (uint16_t *) 0xB8000;
+	tty->fg_color = 0x07;
+	tty->bg_color = 0x00;
 
-void term_setcolor (uint8_t color) {
-	term_color = color;
+	tty->video = video;
+
+	for (size_t y = 0; y < video->height; y++)
+		for (size_t x = 0; x < video->width; x++)
+			term_putentry (' ', MAKE_COLOR (tty->fg_color, tty->bg_color), x, y);
+
+	return tty;
 }
 
 void term_putentry (char c, uint8_t color, size_t x, size_t y) {
-	term_buff[x + y * VGA_WIDTH] = make_vgaentry (c, color);
+	tty->address[x + y * tty->video->width] = make_vgaentry (c, color);
 }
 
 static void term_scroll () {
-	memcpy (term_buff, term_buff + (VGA_WIDTH), (VGA_HEIGHT - 1) * VGA_WIDTH);
-	for (size_t x = 0; x < VGA_WIDTH; x++)
-		term_putentry (' ', term_color, x, VGA_HEIGHT - 1);
+	memcpy (tty->address, tty->address + (tty->video->width), (tty->video->height - 1) * tty->video->width);
+	for (size_t x = 0; x < tty->video->width; x++)
+		term_putentry (' ', MAKE_COLOR (tty->fg_color, tty->bg_color), x, VGA_HEIGHT - 1);
 }
 
 static void term_newline () {
-	term_col = 0;
-	if (term_row + 1 == VGA_HEIGHT)
+	tty->x = 0;
+	if (tty->y + 1 == tty->video->height)
 		term_scroll ();
 	else
-		term_row++;
+		tty->y++;
 }
 
 void term_putc (char c) {
 	if (c == '\n')
 		term_newline ();
 	else if (c == '\r')
-		term_col = 0;
+		tty->x = 0;
 	else {
-		if (term_col == VGA_WIDTH)
+		if (tty->x == tty->video->width)
 			term_newline ();
-		term_putentry (c, term_color, term_col, term_row);
-		term_col++;
-		term_set_cursor (term_col, term_row);
+		term_putentry (c, MAKE_COLOR (tty->fg_color, tty->bg_color), tty->x, tty->y);
+		tty->x++;
+		term_set_cursor (tty->x, tty->y);
 	}
 }
 
@@ -69,8 +71,17 @@ void term_writes (const char *data) {
 	term_write (data, strlen (data));
 }
 
+size_t term_write_dev (void *tag, const void *data, size_t len, uint32_t addr) {
+	term_write (data, len);
+
+	(void) tag;
+	(void) addr;
+
+	return len;
+}
+
 void term_set_cursor (size_t x, size_t y) {
-	uint16_t pos = x + y * VGA_WIDTH;
+	uint16_t pos = x + y * tty->video->width;
 
 	outb(0x3D4, 0x0F);
 	outb(0x3D5, (uint8_t) (pos & 0xFF));

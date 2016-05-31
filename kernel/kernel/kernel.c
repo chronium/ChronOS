@@ -4,6 +4,7 @@
 
 #include <kernel/tty.h>
 #include <kernel/heap.h>
+#include <kernel/video.h>
 
 #if defined(__i386__)
 #include <arch/i386/idt.h>
@@ -17,25 +18,25 @@ multiboot_info_t *mboot_info;
 
 void kearly (multiboot_info_t *_mboot_info) {
 	mboot_info = _mboot_info;
-	term_init ();
 	init_kheap (*(uint32_t *)(mboot_info->mods_addr + 4));
+	init_video (true);
 	printf("Heap initialized\n");
 }
 #else
 void kearly (void) {
-	
+	init_video (true);
 }
 #endif
 
 void kmain (void) {
 #if defined(__i386__)
-	idt_initialize ();
+	init_idt ();
 	puts ("IDT initialized");
-	pic_initialize ();
+	init_pic ();
 	puts ("PIC initialized");
-	paging_initialize ();
+	init_paging ();
 	puts ("Paging initialized");
-	serial_initialize ();
+	init_serial ();
 	puts ("Serial initialized");
 	dev_write (COM1, "Helo Serial World!\n", strlen ("Hello Serial World!\n"), 0);
 #endif

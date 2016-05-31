@@ -45,7 +45,7 @@ void pic_eoi_slave () {
   outb (PIC_SLAVE, PIC_CMD_ENDINTR);
 }
 
-void pic_initialize () {
+void init_pic () {
   uint8_t map_irqs_at = 32;
   uint8_t master_mask = 0;
   uint8_t slave_mask = 0;

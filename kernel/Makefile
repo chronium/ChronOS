@@ -28,7 +28,8 @@ $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 kernel/panic.o \
 kernel/memory/heap.o \
-kernel/hardware/device.o
+kernel/hardware/device.o \
+kernel/graphics/video.o
 
 CRTI_OBJ:=$(ARCHDIR)/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
