@@ -256,13 +256,13 @@ void screen_loop () {
 
 		if (mousex <= 0)
 			mousex = 0;
-		if (mousex >= video->width)
-			mousex = video->width;
+		if (mousex > video->width)
+			mousex = video->width - 1;
 
 		if (mousey <= 0)
 			mousey = 0;
-		if (mousey >= video->height)
-			mousey = video->height;
+		if (mousey > video->height)
+			mousey = video->height - 1;
 
 		set_pixel (video, mousex, mousey, 0xFFFFFFFF);
 		swap_buffers (video, 0, 0, 320, 200);

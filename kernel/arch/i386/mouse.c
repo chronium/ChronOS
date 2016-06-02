@@ -48,31 +48,23 @@ static inline uint8_t mouse_read (void) {
 static void mouse_handler (regs_t *ctx) {
   (void) ctx;
   uint8_t status = inb (MOUSE_STATUS);
-  while (status & MOUSE_BBIT) {
-    int8_t mouse_in = inb (MOUSE_PORT);
-
-    if (status & MOUSE_F_BIT) {
-      switch (mouse_cycle) {
-        case 0:
-          mouse_byte[0] = mouse_in;
-          if (!(mouse_in & MOUSE_V_BIT)) goto read_next;
-          mouse_cycle++;
-          break;
-        case 1:
-          mouse_byte[1] = mouse_in;
-          mouse_cycle++;
-          break;
-        case 2:
-          mouse_byte[2] = mouse_in;
-          mouse_dx = mouse_byte[1];
-          mouse_dy = mouse_byte[2];
-          mouse_cycle = 0;
-          break;
-      }
-      goto read_next;
-    }
-  read_next:
-    status = inb (MOUSE_STATUS);
+  (void) status;
+  int8_t mouse_in = inb (MOUSE_PORT);
+  switch (mouse_cycle) {
+    case 0:
+      mouse_byte[0] = mouse_in;
+      mouse_cycle++;
+      break;
+    case 1:
+      mouse_byte[1] = mouse_in;
+      mouse_cycle++;
+      break;
+    case 2:
+      mouse_byte[2] = mouse_in;
+      mouse_dx = mouse_byte[1];
+      mouse_dy = mouse_byte[2];
+      mouse_cycle = 0;
+      break;
   }
 }
 

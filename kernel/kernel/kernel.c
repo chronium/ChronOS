@@ -6,6 +6,8 @@
 #include <kernel/heap.h>
 #include <kernel/video.h>
 
+#define _GRAPHICS 0
+
 #if defined(__i386__)
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -21,7 +23,11 @@ multiboot_info_t *mboot_info;
 void kearly (multiboot_info_t *_mboot_info) {
 	mboot_info = _mboot_info;
 	init_kheap (*(uint32_t *)(mboot_info->mods_addr + 4));
+#ifdef _GRAPHICS
+	init_video (true);
+#else
 	init_video (false);
+#endif
 	printf ("Heap initialized\n");
 }
 #else
@@ -52,8 +58,9 @@ void kmain (void) {
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
 
 #if defined(__i386__)
-	//screen_loop ();
-
+#ifdef _GRAPHICS
+	screen_loop ();
+#endif
 	for (;;) asm ("hlt");
 #endif
 }
