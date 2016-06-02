@@ -29,6 +29,8 @@ init/__init_libc.o \
 stdio/printf.o \
 stdio/putchar.o \
 stdio/puts.o \
+stdio/sprintf.o \
+stdio/vsprintf.o \
 stdlib/abort.o \
 stdlib/malloc.o \
 stdlib/calloc.o \

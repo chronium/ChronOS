@@ -38,10 +38,10 @@ static char *exceptions[] = {
 	"Reserved",
 };
 
-void handle_exception (struct interrupt_context *int_ctx) {
+void handle_exception (regs_t *registers) {
 	asm volatile ("cli");
 
-	printf("Exception: %s\n", exceptions[int_ctx->int_no]);
+	printf("Exception: %s\n", exceptions[registers->int_no]);
 
 	while (true) asm ("hlt");
 }

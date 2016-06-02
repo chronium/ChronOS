@@ -7,7 +7,7 @@
 int putchar (int ic) {
 #if defined (__is_chronos_kernel)
 	char c = (char) ic;
-	term_write (&c, sizeof (c));
+	term_write (get_textmode (), &c, sizeof (c));
 #else
 	// TODO: Implement syscall.
 #endif

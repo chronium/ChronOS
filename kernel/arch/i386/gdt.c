@@ -1,77 +1,66 @@
 #include <stdint.h>
+#include <string.h>
 
-struct tss_entry
-{
-	uint32_t prev_tss;
-	uint32_t esp0;
-	uint32_t ss0;
-	uint32_t esp1;
-	uint32_t ss1;
-	uint32_t esp2;
-	uint32_t ss2;
-	uint32_t cr3;
-	uint32_t eip;
-	uint32_t eflags;
-	uint32_t eax;
-	uint32_t ecx;
-	uint32_t edx;
-	uint32_t ebx;
-	uint32_t esp;
-	uint32_t ebp;
-	uint32_t esi;
-	uint32_t edi;
-	uint32_t es;
-	uint32_t cs;
-	uint32_t ss;
-	uint32_t ds;
-	uint32_t fs;
-	uint32_t gs;
-	uint32_t ldt;
-	uint16_t trap;
-	uint16_t iomap_base;
-};
+#include <arch/i386/gdt.h>
+#include <arch/i386/tss.h>
 
-struct tss_entry tss =
-{
-	.ss0 = 0x10,
-	.esp0 = 0,
-	.es = 0x10,
-	.cs = 0x08,
-	.ds = 0x13,
-	.fs = 0x13,
-	.gs = 0x13,
-};
+static struct gdt_entry gdt[6];
+static struct tss_entry tss_ent;
 
-#define GRAN_64_BIT_MODE (1 << 5)
-#define GRAN_32_BIT_MODE (1 << 6)
-#define GRAN_4KIB_BLOCKS (1 << 7)
+static struct gdt_ptr ptr;
 
-struct gdt_entry
-{
-	uint16_t limit_low;
-	uint16_t base_low;
-	uint8_t base_middle;
-	uint8_t access;
-	uint8_t granularity;
-	uint8_t base_high;
-};
+static void gdt_set_gate (uint32_t, uint32_t, uint32_t, uint8_t, uint8_t);
+static void write_tss (uint32_t, uint16_t, uint32_t);
+static inline void tss_flush ();
 
-#define GDT_ENTRY(base, limit, access, granularity) \
-	{ (limit) & 0xFFFF,                                \
-	  (base) >> 0 & 0xFFFF,                            \
-	  (base) >> 16 & 0xFF,                             \
-	  (access) & 0xFF,                                 \
-	  ((limit) >> 16 & 0x0F) | ((granularity) & 0xF0), \
-	  (base) >> 24 & 0xFF,                             }
+static void gdt_set_gate (uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran) {
+	gdt[num].base_low 		= (base & 0xFFFF);
+	gdt[num].base_middle 	= (base >> 16) & 0xFF;
+	gdt[num].base_high 		= (base >> 24) & 0xFF;
+	gdt[num].limit_low 		= (limit & 0xFFFF);
+	gdt[num].granularity 	= (limit >> 16) & 0x0F;
+	gdt[num].granularity |= (gran & 0xF0);
+	gdt[num].access 			= access;
+}
 
-struct gdt_entry gdt[] =
-{
-	GDT_ENTRY(0, 0, 0, 0),
-	GDT_ENTRY(0, 0xFFFFFFFF, 0x9A, GRAN_32_BIT_MODE | GRAN_4KIB_BLOCKS),
-	GDT_ENTRY(0, 0xFFFFFFFF, 0x92, GRAN_32_BIT_MODE | GRAN_4KIB_BLOCKS),
-	GDT_ENTRY(0, 0xFFFFFFFF, 0xFA, GRAN_32_BIT_MODE | GRAN_4KIB_BLOCKS),
-	GDT_ENTRY(0, 0xFFFFFFFF, 0xF2, GRAN_32_BIT_MODE | GRAN_4KIB_BLOCKS),
-	GDT_ENTRY(0, sizeof(tss) - 1, 0xE9, 0x00),
-};
+void init_gdt () {
+	ptr.limit = sizeof (struct gdt_entry) * 6;
+	ptr.base = (uint32_t) &gdt;
 
-uint16_t gdt_size_minus_one = sizeof(gdt) - 1;
+	gdt_set_gate (0, 0, 0, 0, 0);
+	gdt_set_gate (1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
+	gdt_set_gate (2, 0, 0xFFFFFFFF, 0x92, 0xCF);
+	gdt_set_gate (3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
+	gdt_set_gate (4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
+
+	write_tss (5, 0x10, 0x00);
+
+	gdt_flush ((uint32_t) &ptr);
+	tss_flush ();
+}
+
+void set_kernel_stack (uint32_t stack) {
+	tss_ent.esp0 = stack;
+}
+
+static void write_tss (uint32_t num, uint16_t ss0, uint32_t esp0) {
+	uint32_t base = (uint32_t) &tss_ent;
+	uint32_t limit = base + sizeof (struct tss_entry);
+
+	gdt_set_gate (num, base, limit, 0xE9, 0x00);
+	memset (&tss_ent, 0, sizeof (struct tss_entry));
+
+	tss_ent.ss0 = ss0;
+	tss_ent.esp0 = esp0;
+	tss_ent.cs = 0x0B;
+	tss_ent.ss = tss_ent.ds = tss_ent.es = tss_ent.fs = tss_ent.gs = 0x13;
+}
+
+static inline void tss_flush () {
+	asm (
+		".intel_syntax noprefix;"
+		"mov ax, 0x2B;"
+		"ltr ax;"
+		".att_syntax noprefix;"
+	);
+}

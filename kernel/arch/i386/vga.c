@@ -1,9 +1,13 @@
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #include <arch/i386/vga.h>
 #include <arch/i386/portio.h>
+#include <arch/i386/mouse.h>
 #include <kernel/tty.h>
 #include <kernel/device.h>
+#include <kernel/video.h>
 
 // static size_t write_320x200x8 (struct device *dev, const void *data, size_t len, uint32_t addr);
 
@@ -97,7 +101,7 @@ void vga_write_regs(unsigned char *regs) {
 }
 
 struct video *init_textmode () {
-  struct video *video = (struct video *) malloc (sizeof (struct video *));
+  struct video *video = (struct video *) malloc (sizeof (struct video));
   video->width = 80;
   video->height = 25;
 
@@ -116,4 +120,151 @@ struct video *init_textmode () {
 	term_init (video);
 
   return video;
+}
+
+void vga_set_palette() {
+	/* set the palette */
+	outb(0x03c8, 0);
+	for(size_t i = 0; i < 256; i++) {
+		/* 8 bit palette will be:
+		 rrrgggbb
+		 */
+		size_t red = ((i >> 5) & 7) * 63 / 7;
+		size_t green = ((i >> 2) & 7) * 63 / 7;
+		size_t blue = (i & 3) * 63 / 3;
+
+		outb(0x03c9, (uint8_t) red);
+		outb(0x03c9, (uint8_t) green);
+		outb(0x03c9, (uint8_t) blue);
+	}
+}
+
+void clear_screen (struct video *video, uint32_t c) {
+	for (size_t y = 0; y < video->height; y++)
+		for (size_t x = 0; x < video->width; x++)
+			video->buffer[x + y * video->width] = c;
+}
+
+void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy) {
+	vga_320x200x256_t *vga = video->dev->dev_tag;
+
+	size_t start_index = minx + miny * video->width;
+	size_t i = start_index;
+	size_t line_jump = video->width - (maxx-minx);
+
+	for (size_t y = 0; y < maxy; y++) {
+		for (size_t x = 0; x < maxx; x++, i++) {
+			uint32_t c = vga->buffer[i];
+
+			uint8_t red = (((c >> 16) & 0xFF)) / 32;
+			uint8_t green = (((c >> 8) & 0xFF)) / 32;
+			uint8_t blue = (c & 0xFF) / 64;
+
+			uint8_t val = (red << 5) | (green << 2) | blue;
+
+			vga->address[i] = val;
+		}
+		i += line_jump;
+	}
+}
+
+void draw_x_line(struct video *video, size_t x, size_t y, size_t width, uint32_t color) {
+	if(y >= video->height)
+		return;
+
+	size_t end_x = x + width;
+
+	if(end_x >= video->width)
+		end_x = video->width;
+
+	size_t indx = video->width * y + x;
+	for(;x != end_x; x++, indx++)
+		video->buffer[indx] = color;
+}
+
+void draw_y_line(struct video *video, size_t x, size_t y, size_t height, uint32_t color) {
+	if(x >= video->width)
+		return;
+
+	size_t end_y = y + height;
+
+	if(end_y >= video->height)
+		end_y = video->height;
+
+	size_t indx = video->width * y + x;
+	for(;y != end_y; y++, indx += video->width)
+		video->buffer[indx] = color;
+}
+
+void set_pixel (struct video *video, size_t x, size_t y, uint32_t c) {
+	video->buffer[x + y * video->width] = c;
+}
+
+static size_t mousex;
+static size_t mousey;
+
+struct video *init_mode13h () {
+	struct video *video = (struct video *) malloc (sizeof (struct video));
+	video->width = 320;
+	video->height = 200;
+
+	video->bpe = 4;
+	video->pitch = video->width * video->bpe;
+
+	video->size = video->height * video->pitch;
+	video->mode = PIXEL_SCREEN;
+
+	struct device *dev = dev_create (BLOCK_DEV, "vga");
+
+	vga_320x200x256_t *vga = (vga_320x200x256_t *) malloc (sizeof (vga_320x200x256_t));
+	vga->address = (uint8_t *) 0xA0000;
+	vga->buffer  = (uint32_t *) malloc (video->width * video->height * 4);
+	memset (vga->buffer, 0, video->width * video->height);
+	vga->size = video->width * video->height;
+
+	dev->dev_tag = vga;
+
+	video->buffer = vga->buffer;
+	video->dev = dev;
+
+	vga_write_regs (vga_320x200x256);
+	vga_set_palette ();
+	clear_screen (video, 0);
+
+	draw_x_line (video, 0, 80, 320, 0x00FF00FF);
+	draw_x_line (video, 0, 120, 320, 0x00FF00FF);
+	draw_y_line (video, 0, 80, 40, 0x00FF00FF);
+	draw_y_line (video, 319, 80, 40, 0x00FF00FF);
+
+	swap_buffers (video, 0, 0, 320, 200);
+
+	mousex = video->width / 2;
+	mousey = video->height / 2;
+
+	return video;
+}
+
+void screen_loop () {
+	while (true) {
+		if (mouse_dx == 0 || mouse_dy == 0)
+			asm ("hlt");
+		mousex += mouse_dx;
+		mousey -= mouse_dy;
+
+		mouse_dx = 0;
+		mouse_dy = 0;
+
+		if (mousex <= 0)
+			mousex = 0;
+		if (mousex >= video->width)
+			mousex = video->width;
+
+		if (mousey <= 0)
+			mousey = 0;
+		if (mousey >= video->height)
+			mousey = video->height;
+
+		set_pixel (video, mousex, mousey, 0xFFFFFFFF);
+		swap_buffers (video, 0, 0, 320, 200);
+	}
 }

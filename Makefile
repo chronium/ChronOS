@@ -14,6 +14,7 @@ export MAKE:=$(MAKE:-make)
 export AR:=$(HOST)-ar
 export AS:=$(HOST)-as
 export CC:=$(HOST)-gcc
+export NAS:=nasm
 
 export PREFIX:=/usr
 export EXEC_PREFIX:=$(PREFIX)
@@ -22,7 +23,8 @@ export LIBDIR:=$(EXEC_PREFIX)/lib
 export INCLUDEDIR:=$(PREFIX)/include
 
 export CFLAGS:=-O0 -g
-export CPPfLAGS:=
+export CPPFLAGS:=
+export NASFLAGS:=-felf32
 
 export CC:=$(CC) --sysroot=$(PWD)/sysroot
 export CC:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \

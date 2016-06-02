@@ -9,7 +9,7 @@ EXEC_PREFIX?=$(PREFIX)
 BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
-CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin -Werror -Wall -Wextra
+CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin -Werror -Wall -Wextra -Wno-format
 CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
@@ -31,10 +31,10 @@ kernel/memory/heap.o \
 kernel/hardware/device.o \
 kernel/graphics/video.o
 
-CRTI_OBJ:=$(ARCHDIR)/crti.o
+CRTI_OBJ:=$(ARCHDIR)/asm/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
 CRTEND_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtend.o)
-CRTN_OBJ:=$(ARCHDIR)/crtn.o
+CRTN_OBJ:=$(ARCHDIR)/asm/crtn.o
 
 ALL_OBJS:=\
 $(CRTI_OBJ) \
@@ -60,6 +60,9 @@ chronos.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
 
 %.o: %.S
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
+%.o: %.asm
+	$(NAS) $(NASFLAGS) $< -o $@
 
 clean:
 	rm -f chronos.kernel $(OBJS) $(ALL_OBJS) *.o */*.o */*/*.o

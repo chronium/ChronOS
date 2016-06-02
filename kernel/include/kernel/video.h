@@ -22,10 +22,11 @@ struct video {
   size_t         size;
   video_mode_t   mode;
 
+  uint32_t      *buffer;
   struct device *dev;
 };
 
-struct textmode {
+typedef struct textmode {
   uint16_t *address;
 
   uint8_t fg_color;
@@ -37,14 +38,19 @@ struct textmode {
   struct video *video;
 } textmode_t;
 
-struct vga_320x200x256_s {
-  uint32_t  *address;
-  uint8_t   *buffer;
+typedef struct vga_320x200x256_s {
+  uint8_t  *address;
+  uint32_t  *buffer;
+
+  size_t size;
 } vga_320x200x256_t;
 
-struct video* video;
+struct video *textscreen;
+struct video *video;
 
-int init_video    (bool);
-void swap_buffers ();
+void init_video    (bool);
+void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy);
+
+void screen_loop ();
 
 #endif
