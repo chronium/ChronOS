@@ -112,12 +112,12 @@ struct video *init_textmode () {
   video->mode = TEXT_SCREEN;
 
   struct device *dev = dev_create (CHAR_DEV, "tty0");
-  dev->write = term_write_dev;
+  //dev->write = term_write_dev;
 
   video->dev = dev;
 
 	vga_write_regs (g_80x25_text);
-	term_init (video);
+	//term_init (video);
 
   return video;
 }

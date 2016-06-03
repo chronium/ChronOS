@@ -8,7 +8,6 @@
 
 #define _GRAPHICS 0
 
-#if defined(__i386__)
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
 #include <arch/i386/paging.h>
@@ -28,18 +27,13 @@ void kearly (multiboot_info_t *_mboot_info) {
 #else
 	init_video (false);
 #endif
-	printf ("Heap initialized\n");
 }
-#else
-extern "C"
-void kearly (void) {
-	init_video (false);
-}
-#endif
+
+Driver::Terminal *terminal;
 
 extern "C"
 void kmain (void) {
-#if defined(__i386__)
+	terminal = new Driver::Terminal(0, "tty0");
 	init_gdt ();
 	puts ("GDT initialized");
 	init_idt ();
@@ -57,13 +51,9 @@ void kmain (void) {
 	printf ("Mouse initialized\n");
 	asm volatile ("sti");
 
-#endif
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
-
-#if defined(__i386__)
 #if _GRAPHICS == 1
 	screen_loop ();
 #endif
 	for (;;) asm ("hlt");
-#endif
 }
