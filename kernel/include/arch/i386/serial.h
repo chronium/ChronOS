@@ -10,6 +10,8 @@
 #define COM3_PORT  0x3E8
 #define COM4_PORT  0x2E8
 
+namespace Driver {
+
 class Serial : public Device {
 public:
   Serial (int id, const char *name, uint16_t port);
@@ -25,18 +27,6 @@ private:
   uint16_t port;
 };
 
-extern struct device *COM2;
-extern struct device *COM3;
-extern struct device *COM4;
-
-
-struct serial_dev {
-  uint16_t com_port;
-};
-
-struct device *create_serial (uint16_t, const char *);
-void serial_enable_port (uint16_t);
-
-void init_serial ();
+}
 
 #endif

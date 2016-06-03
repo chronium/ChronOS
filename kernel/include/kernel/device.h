@@ -10,6 +10,8 @@ typedef enum device_type {
   CHAR_DEV = 2,
 } dev_type_t;
 
+namespace Driver {
+
 class Device {
 public:
   enum class DeviceType {
@@ -44,6 +46,8 @@ private:
   const char *name;
   DeviceType type;
 };
+
+}
 
 struct device {
   char           *dev_name;

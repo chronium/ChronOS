@@ -4,12 +4,16 @@
 
 #include <kernel/device.h>
 
+namespace Driver {
+
 Device::Device (int id, const char *name, DeviceType type) :
   id (id),
   name (name),
   type (type) { }
 
 Device::~Device () { }
+
+}
 
 struct device *dev_list = NULL;
 static int next_devid = 0;
