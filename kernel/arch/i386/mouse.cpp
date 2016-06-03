@@ -45,6 +45,10 @@ static inline uint8_t mouse_read (void) {
   return inb (MOUSE_PORT);
 }
 
+static uint8_t mouse_byte[4];
+int8_t mouse_dx;
+int8_t mouse_dy;
+
 static void mouse_handler (regs_t *ctx) {
   (void) ctx;
   uint8_t status = inb (MOUSE_STATUS);

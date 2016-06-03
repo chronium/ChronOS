@@ -4,9 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-int8_t mouse_dx;
-int8_t mouse_dy;
-uint8_t mouse_byte[4];
+extern int8_t mouse_dx;
+extern int8_t mouse_dy;
 
 void init_mouse ();
 

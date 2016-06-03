@@ -19,6 +19,7 @@ int free_irq (int inum) {
   return 0;
 }
 
+extern "C"
 void handle_irq (regs_t *registers) {
   int i = (registers->int_no & 0xFF) - 32;
   if (i >= 8)

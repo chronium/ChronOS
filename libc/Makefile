@@ -25,6 +25,7 @@ LIBK_CPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 
 FREEOBJS:=\
 $(ARCH_FREEOBJS) \
+cpp/op-new.o \
 init/__init_libc.o \
 stdio/printf.o \
 stdio/putchar.o \
@@ -34,6 +35,7 @@ stdio/vsprintf.o \
 stdlib/abort.o \
 stdlib/malloc.o \
 stdlib/calloc.o \
+stdlib/free.o \
 string/memcmp.o \
 string/memcpy.o \
 string/memmove.o \
@@ -69,11 +71,17 @@ libk.a: $(LIBK_OBJS)
 %.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
+%.o: %.cpp
+	$(CXX) -c $< -o $@ -std=gnu++11 $(CFLAGS) $(CPPFLAGS)
+
 %.o: %.S
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
 
 %.libk.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
+
+%.libk.o: %.cpp
+	$(CXX) -c $< -o $@ -std=gnu++11 $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
 
 %.libk.o: %.S
 	$(CC) -c $< -o $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)

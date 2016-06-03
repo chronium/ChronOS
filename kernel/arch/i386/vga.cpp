@@ -146,7 +146,7 @@ void clear_screen (struct video *video, uint32_t c) {
 }
 
 void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy) {
-	vga_320x200x256_t *vga = video->dev->dev_tag;
+	vga_320x200x256_t *vga = (vga_320x200x256_t *) video->dev->dev_tag;
 
 	size_t start_index = minx + miny * video->width;
 	size_t i = start_index;
@@ -256,15 +256,15 @@ void screen_loop () {
 
 		if (mousex <= 0)
 			mousex = 0;
-		if (mousex > video->width)
-			mousex = video->width - 1;
+		if (mousex > video_inst->width)
+			mousex = video_inst->width - 1;
 
 		if (mousey <= 0)
 			mousey = 0;
-		if (mousey > video->height)
-			mousey = video->height - 1;
+		if (mousey > video_inst->height)
+			mousey = video_inst->height - 1;
 
-		set_pixel (video, mousex, mousey, 0xFFFFFFFF);
-		swap_buffers (video, 0, 0, 320, 200);
+		set_pixel (video_inst, mousex, mousey, 0xFFFFFFFF);
+		swap_buffers (video_inst, 0, 0, 320, 200);
 	}
 }

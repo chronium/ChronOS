@@ -58,7 +58,7 @@ static void print_hex (unsigned int value, unsigned int width, char *buf, int *p
   }
 }
 
-int vsprintf (char *buf, const char * restrict format, va_list args) {
+int vsprintf (char *buf, const char * __restrict format, va_list args) {
   int i = 0;
   char *s;
   char *b = buf;
@@ -81,7 +81,7 @@ int vsprintf (char *buf, const char * restrict format, va_list args) {
       case 's':
         s = (char *) va_arg (args, char *);
         if (s == NULL)
-          s = "(null)";
+          s = (char *) "(null)";
         while (*s)
           *b++ = *s++;
         break;

@@ -18,8 +18,9 @@ struct gdt_ptr {
 } __attribute__ ((packed));
 
 void init_gdt ();
-void set_kernel_stack (uint32_t stack);
+void set_kernel_stack (uint32_t);
 
-extern void gdt_flush ();
+extern "C"
+void gdt_flush (uint32_t);
 
 #endif

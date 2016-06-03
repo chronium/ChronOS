@@ -14,7 +14,7 @@ static void print (const char *data, size_t len) {
 		putchar ((int) ((const unsigned char *) data) [i]);
 }
 
-int printf (const char * restrict format, ...) {
+int printf (const char * __restrict format, ...) {
 	va_list argp;
 	va_start (argp, format);
 

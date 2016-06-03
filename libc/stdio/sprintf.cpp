@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-int sprintf (char *dest, const char * restrict format, ...) {
+int sprintf (char *dest, const char * __restrict format, ...) {
   va_list argp;
 
   va_start (argp, format);

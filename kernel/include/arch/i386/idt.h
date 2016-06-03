@@ -16,6 +16,7 @@ struct idt_ptr {
   uint32_t base;
 } __attribute__ ((packed));
 
+extern "C" {
 extern void isr0 ();
 extern void isr1 ();
 extern void isr2 ();
@@ -66,5 +67,6 @@ extern void irq14 ();
 extern void irq15 ();
 
 void init_idt ();
+}
 
 #endif

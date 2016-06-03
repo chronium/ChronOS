@@ -26,17 +26,7 @@ struct video {
   struct device *dev;
 };
 
-typedef struct textmode {
-  uint16_t *address;
-
-  uint8_t fg_color;
-  uint8_t bg_color;
-
-  size_t x;
-  size_t y;
-
-  struct video *video;
-} textmode_t;
+extern struct video *video_inst;
 
 typedef struct vga_320x200x256_s {
   uint8_t  *address;
@@ -44,9 +34,6 @@ typedef struct vga_320x200x256_s {
 
   size_t size;
 } vga_320x200x256_t;
-
-struct video *textscreen;
-struct video *video;
 
 void init_video    (bool);
 void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy);

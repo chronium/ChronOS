@@ -27,7 +27,7 @@ void *kalloc (size_t size) {
   struct mblock *new_mb = kheap_get_block (size);
 
   if (!new_mb) {
-    new_mb = kheap_alloc (sizeof (struct mblock));
+    new_mb = (struct mblock *) kheap_alloc (sizeof (struct mblock));
     new_mb->memory = kheap_alloc (size);
     new_mb->size = size;
   }
@@ -57,13 +57,13 @@ static struct mblock *kheap_get_block (size_t size) {
   while (i) {
     if (i->size > size) {
       if (p == i)
-        free_top = i->next_block;
+        free_top = (struct mblock *) i->next_block;
       else
         p->next_block = i->next_block;
       return i;
     }
     p = i;
-    i = i->next_block;
+    i = (struct mblock *) i->next_block;
   }
 
   return NULL;
@@ -100,14 +100,14 @@ void kfree (void *ptr) {
         panic ();
       }
       if (p == i)
-        used_top = i->next_block;
+        used_top = (struct mblock *) i->next_block;
       else
         p->next_block = i->next_block;
       i->next_block = free_top;
       free_top = i;
     }
     i = i;
-    i = i->next_block;
+    i = (struct mblock *) i->next_block;
   }
 }
 
@@ -117,7 +117,7 @@ size_t ksize (void *ptr) {
   while (i) {
       if (i->memory == ptr)
         return i->size;
-      i = i->next_block;
+      i = (struct mblock *) i->next_block;
   }
 
   return 0;

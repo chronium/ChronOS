@@ -19,11 +19,11 @@
 #include <arch/i386/multiboot.h>
 
 multiboot_info_t *mboot_info;
-
+extern "C"
 void kearly (multiboot_info_t *_mboot_info) {
 	mboot_info = _mboot_info;
 	init_kheap (*(uint32_t *)(mboot_info->mods_addr + 4));
-#ifdef _GRAPHICS
+#if _GRAPHICS == 1
 	init_video (true);
 #else
 	init_video (false);
@@ -31,11 +31,22 @@ void kearly (multiboot_info_t *_mboot_info) {
 	printf ("Heap initialized\n");
 }
 #else
+extern "C"
 void kearly (void) {
 	init_video (false);
 }
 #endif
 
+class Test {
+public:
+	const char *name;
+
+	Test (const char *name) {
+		this->name = name;
+	}
+};
+
+extern "C"
 void kmain (void) {
 #if defined(__i386__)
 	init_gdt ();
@@ -56,9 +67,9 @@ void kmain (void) {
 
 #endif
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
-
+	printf ("Calass test:%s \n", (new Test ("John"))->name);
 #if defined(__i386__)
-#ifdef _GRAPHICS
+#if _GRAPHICS == 1
 	screen_loop ();
 #endif
 	for (;;) asm ("hlt");

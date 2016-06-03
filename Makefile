@@ -14,6 +14,7 @@ export MAKE:=$(MAKE:-make)
 export AR:=$(HOST)-ar
 export AS:=$(HOST)-as
 export CC:=$(HOST)-gcc
+export CXX:=$(HOST)-g++
 export NAS:=nasm
 
 export PREFIX:=/usr
@@ -29,6 +30,10 @@ export NASFLAGS:=-felf32
 export CC:=$(CC) --sysroot=$(PWD)/sysroot
 export CC:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
 	echo "$(CC) -isystem=$(INCLUDEDIR)" ; \
+fi)
+export CXX:=$(CXX) --sysroot=$(PWD)/sysroot
+export CXX:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
+	echo "$(CXX) -isystem=$(INCLUDEDIR)" ; \
 fi)
 export CPPFLAGS:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
 	echo "$(CPPFLAGS) -D__HAS_NO_CRT_INIT" ; \

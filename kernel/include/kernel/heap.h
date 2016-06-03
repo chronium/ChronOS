@@ -11,9 +11,15 @@ struct mblock {
 };
 
 void init_kheap (uint32_t);
+#ifdef __cplusplus
+extern "C"
+#endif
 void *kalloc (size_t);
 void *malloc_pa (size_t);
 void *realloc (void *, size_t);
+#ifdef __cplusplus
+extern "C"
+#endif
 void kfree (void *);
 size_t ksize (void *);
 

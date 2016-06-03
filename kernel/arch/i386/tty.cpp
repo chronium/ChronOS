@@ -73,7 +73,7 @@ void term_writes (textmode_t *tty, const char *data) {
 }
 
 size_t term_write_dev (void *tag, const void *data, size_t len, uint32_t addr) {
-	term_write (tag, data, len);
+	term_write ((textmode_t *) tag, (const char *) data, len);
 
 	(void) addr;
 

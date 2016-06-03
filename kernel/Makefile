@@ -10,7 +10,7 @@ BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin -Werror -Wall -Wextra -Wno-format
-CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude
+CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude -Wno-pointer-arith
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
@@ -57,6 +57,9 @@ chronos.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
 
 %.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
+
+%.o: %.cpp
+	$(CXX) -c $< -o $@ -std=gnu++11 $(CFLAGS) $(CPPFLAGS)
 
 %.o: %.S
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)

@@ -3,7 +3,7 @@
 
 #include <arch/i386/exception.h>
 
-static char *exceptions[] = {
+static const char *exceptions[] = {
 	"Divide by 0",
 	"Single step",
 	"Non Maskable Interrupt",

@@ -2,8 +2,8 @@
 #include <limits.h>
 
 void *memmove (void *dest, const void *src, size_t n) {
-	char *d = dest;
-	const char *s = src;
+	char *d = (char *) dest;
+	const char *s = (const char *) src;
 
 	if (d == s)
 		return d;

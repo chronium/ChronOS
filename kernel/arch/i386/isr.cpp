@@ -19,6 +19,7 @@ int free_isr (int inum) {
   return 0;
 }
 
+extern "C"
 void handle_isr (regs_t *registers) {
   int i = registers->int_no & 0xFF;
   if (isr_handlers[i])
