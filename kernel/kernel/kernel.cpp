@@ -46,6 +46,27 @@ public:
 	}
 };
 
+class Animal {
+public:
+	virtual void Act () {
+		puts ("NaN");
+	}
+};
+
+class Dog : public Animal {
+public:
+	void Act () {
+		puts ("Woof!");
+	}
+};
+
+class Cat : public Animal {
+public:
+	void Act () {
+		puts ("Meow!");
+	}
+};
+
 extern "C"
 void kmain (void) {
 #if defined(__i386__)
@@ -56,8 +77,10 @@ void kmain (void) {
 	init_paging ();
 	puts ("Paging initialized");
 	init_serial ();
+	Serial COM1 (0, "COM1", COM1_PORT);
+	const char *serial_test = "Hello Serial World!\n\r";
+	COM1.Write (serial_test, strlen (serial_test), 0);
 	puts ("Serial initialized");
-	dev_write (COM1, "Helo Serial World!\n", strlen ("Hello Serial World!\n"), 0);
 
 	init_keyboard ();
 	printf ("Keyboard initialized\n");
@@ -67,7 +90,11 @@ void kmain (void) {
 
 #endif
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
-	printf ("Calass test:%s \n", (new Test ("John"))->name);
+	printf ("Class test:%s \n", (new Test ("John"))->name);
+	Animal *dog = new Dog ();
+	dog->Act ();
+	Animal *cat = new Cat ();
+	cat->Act ();
 #if defined(__i386__)
 #if _GRAPHICS == 1
 	screen_loop ();

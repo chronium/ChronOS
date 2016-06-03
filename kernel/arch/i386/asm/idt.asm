@@ -9,8 +9,8 @@ isr0:
 	[GLOBAL isr%1]        ; %1 accesses the first parameter.
 	isr%1:
 	cli
-	push  0
-	push  %1
+	push byte 0
+	push %1
 	jmp isr_common_stub
 %endmacro
 
@@ -18,7 +18,7 @@ isr0:
   global isr%1
   isr%1:
     cli                         ; Disable interrupts.
-    push byte %1                ; Push the interrupt number
+    push %1                ; Push the interrupt number
     jmp isr_common_stub
 %endmacro
 
@@ -27,7 +27,7 @@ isr0:
   irq%1:
     cli
     push byte 0
-    push byte %2
+    push %2
     jmp irq_common_stub
 %endmacro
 

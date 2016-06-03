@@ -6,7 +6,50 @@
 #include <arch/i386/serial.h>
 #include <arch/i386/portio.h>
 
-struct device *COM1;
+Serial::Serial (int id, const char *name, uint16_t port) :
+  Device (id, name, DeviceType::CharDevice),
+  port (port) {
+  this->EnablePort ();
+}
+
+Serial::~Serial () { }
+
+void Serial::EnablePort () {
+  outb (this->port + 1, 0x00);
+  outb (this->port + 3, 0x80);
+  outb (this->port + 0, 0x03);
+  outb (this->port + 1, 0x00);
+  outb (this->port + 3, 0x03);
+  outb (this->port + 2, 0xC7);
+  outb (this->port + 4, 0x0B);
+}
+
+size_t Serial::Read (void *buffer, size_t len, uint32_t address) {
+  (void) buffer;
+  (void) len;
+  (void) address;
+
+  return 0;
+}
+
+size_t Serial::Write (const void *buffer, size_t len, uint32_t address) {
+  const char *data = (const char *) buffer;
+
+  for (size_t i = 0; i < len; i++)
+    this->PutC (data[address + i]);
+
+  return len;
+}
+
+void Serial::PutC (char c) {
+  while (!this->Empty ()) asm volatile ("hlt");
+  outb (this->port, c);
+}
+
+bool Serial::Empty () {
+  return inb (this->port + 5) & 0x20;
+}
+
 struct device *COM2;
 struct device *COM3;
 struct device *COM4;
@@ -16,7 +59,6 @@ static void serial_putc (uint16_t, char);
 static size_t serial_write (void *, const void *, size_t, uint32_t);
 
 void init_serial () {
-  COM1 = create_serial (COM1_PORT, "COM1");
   COM2 = create_serial (COM2_PORT, "COM2");
   COM3 = create_serial (COM3_PORT, "COM3");
   COM4 = create_serial (COM4_PORT, "COM4");

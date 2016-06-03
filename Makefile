@@ -24,7 +24,7 @@ export LIBDIR:=$(EXEC_PREFIX)/lib
 export INCLUDEDIR:=$(PREFIX)/include
 
 export CFLAGS:=-O0 -g
-export CPPFLAGS:=
+export CPPFLAGS:=-fno-rtti -fno-exceptions
 export NASFLAGS:=-felf32
 
 export CC:=$(CC) --sysroot=$(PWD)/sysroot
