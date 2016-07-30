@@ -19,3 +19,11 @@ To clean the project you simply run the clean make target like so.
 ```sh
 make clean
 ```
+
+# Troubleshooting
+If the iso stage fails with `xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image` you must install `mtools`.
+
+* On Arch: `sudo pacman -Sy mtools`
+* On Debian/Ubuntu: `sudo apt-get install mtools`
+* On Fedora/Red Hat/CentOS: `yum install mtools`
+
