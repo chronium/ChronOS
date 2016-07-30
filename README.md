@@ -25,5 +25,5 @@ If the iso stage fails with `xorriso : FAILURE : Cannot find path '/efi.img' in 
 
 * On Arch: `sudo pacman -Sy mtools`
 * On Debian/Ubuntu: `sudo apt-get install mtools`
-* On Fedora/Red Hat/CentOS: `yum install mtools`
+* On Fedora/Red Hat/CentOS: `sudo yum install mtools`
 
