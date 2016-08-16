@@ -29,4 +29,4 @@ make clean
 * On Fedora/Red Hat/CentOS: `sudo yum install mtools`
 
 ## `grub-mkrescue: error: ``mformat`` invocation failed`
-See `xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image`
+[See above](https://github.com/chronium/ChronOS/blob/master/README.md#xorriso--failure--cannot-find-path-efiimg-in-loaded-iso-image).
