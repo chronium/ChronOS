@@ -21,8 +21,12 @@ make clean
 ```
 
 # Troubleshooting
-If the iso stage fails with `xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image` or with `grub-mkrescue: error: ``mformat`` invocation failed` you must install `mtools`.
+## `xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image`
 
+**Linux**:
 * On Arch: `sudo pacman -Sy mtools`
 * On Debian/Ubuntu: `sudo apt-get install mtools`
 * On Fedora/Red Hat/CentOS: `sudo yum install mtools`
+
+## `grub-mkrescue: error: ``mformat`` invocation failed`
+See `xorriso : FAILURE : Cannot find path '/efi.img' in loaded ISO image`
