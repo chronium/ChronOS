@@ -58,6 +58,9 @@ kernel: headers
 		make -C $$PROJECT install ; \
 	done
 
+lib: headers
+	make -C libc ;
+
 headers:
 	mkdir -p sysroot
 	for PROJECT in $(SYSTEM_HEADER_PROJECTS); do \

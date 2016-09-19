@@ -2,11 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <kernel/icxxabi.h>
+
 #include <kernel/tty.h>
 #include <kernel/heap.h>
 #include <kernel/video.h>
+#include <kernel/context>
+#include <kernel/window>
+#include <kernel/list>
+#include <kernel/desktop>
 
-#define _GRAPHICS 0
+#define _GRAPHICS 1
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -29,20 +35,19 @@ void kearly (multiboot_info_t *_mboot_info) {
 #endif
 }
 
-Driver::Terminal *terminal;
+Driver::Terminal *terminal = new Driver::Terminal (0, "tty0");
 
 extern "C"
 void kmain (void) {
-	terminal = new Driver::Terminal(0, "tty0");
 	init_gdt ();
 	puts ("GDT initialized");
 	init_idt ();
 	puts ("IDT initialized");
 	init_paging ();
 	puts ("Paging initialized");
-	Driver::Serial COM1 (0, "COM1", COM1_PORT);
+	//Driver::Serial COM1 (0, "COM1", COM1_PORT);
 	const char *serial_test = "Hello Serial World!\n\r";
-	COM1.Write (serial_test, strlen (serial_test), 0);
+	Driver::COM1.Write (serial_test, strlen (serial_test), 0);
 	puts ("Serial initialized");
 
 	init_keyboard ();
@@ -52,8 +57,24 @@ void kmain (void) {
 	asm volatile ("sti");
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
+
 #if _GRAPHICS == 1
-	screen_loop ();
+	//screen_loop ();
+
+	Context *context = new Context (video_inst);
+
+	Desktop *desktop = new Desktop (context);
+	desktop->createWindow (10, 10, 80, 50);
+	desktop->createWindow (100, 50, 50, 60);
+	desktop->createWindow (200, 100, 50, 50);
+
+	while (true) {
+		desktop->update (mouse_x, mouse_y, mouse_left);
+	}
+
 #endif
+
+	__cxa_finalize (0);
+
 	for (;;) asm ("hlt");
 }

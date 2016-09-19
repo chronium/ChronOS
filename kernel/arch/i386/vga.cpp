@@ -145,27 +145,31 @@ void clear_screen (struct video *video, uint32_t c) {
 			video->buffer[x + y * video->width] = c;
 }
 
-void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy) {
+void swap_buffers (struct video *video, size_t x, size_t y, size_t width, size_t height) {
 	vga_320x200x256_t *vga = (vga_320x200x256_t *) video->dev->dev_tag;
 
-	size_t start_index = minx + miny * video->width;
-	size_t i = start_index;
-	size_t line_jump = video->width - (maxx-minx);
+	uint16_t cur_x;
+  uint16_t cur_y;
+  uint16_t max_x = x + width;
+  uint16_t max_y = y + height;
 
-	for (size_t y = 0; y < maxy; y++) {
-		for (size_t x = 0; x < maxx; x++, i++) {
-			uint32_t c = vga->buffer[i];
+  if (max_x > video->width)
+    max_x = video->width;
+  if (max_y > video->height)
+    max_y = video->height;
 
-			uint8_t red = (((c >> 16) & 0xFF)) / 32;
-			uint8_t green = (((c >> 8) & 0xFF)) / 32;
+  for (cur_y = y; cur_y < max_y; cur_y++)
+    for (cur_x = x; cur_x < max_x; cur_x++) {
+			uint32_t c = vga->buffer[cur_x + cur_y * video->width];
+
+			uint8_t red = ((c >> 16) & 0xFF) / 32;
+			uint8_t green = ((c >> 8) & 0xFF) / 32;
 			uint8_t blue = (c & 0xFF) / 64;
 
 			uint8_t val = (red << 5) | (green << 2) | blue;
 
-			vga->address[i] = val;
+			vga->address[cur_x + cur_y * video->width] = val;
 		}
-		i += line_jump;
-	}
 }
 
 void draw_x_line(struct video *video, size_t x, size_t y, size_t width, uint32_t color) {
@@ -196,7 +200,7 @@ void draw_y_line(struct video *video, size_t x, size_t y, size_t height, uint32_
 		video->buffer[indx] = color;
 }
 
-void set_pixel (struct video *video, size_t x, size_t y, uint32_t c) {
+inline void set_pixel (struct video *video, size_t x, size_t y, uint32_t c) {
 	video->buffer[x + y * video->width] = c;
 }
 
@@ -231,11 +235,6 @@ struct video *init_mode13h () {
 	vga_set_palette ();
 	clear_screen (video, 0);
 
-	draw_x_line (video, 0, 80, 320, 0x00FF00FF);
-	draw_x_line (video, 0, 120, 320, 0x00FF00FF);
-	draw_y_line (video, 0, 80, 40, 0x00FF00FF);
-	draw_y_line (video, 319, 80, 40, 0x00FF00FF);
-
 	swap_buffers (video, 0, 0, 320, 200);
 
 	mousex = video->width / 2;
@@ -264,7 +263,7 @@ void screen_loop () {
 		if (mousey > video_inst->height)
 			mousey = video_inst->height - 1;
 
-		set_pixel (video_inst, mousex, mousey, 0xFFFFFFFF);
+		//set_pixel (video_inst, mousex, mousey, 0xFFFFFFFF);
 		swap_buffers (video_inst, 0, 0, 320, 200);
 	}
 }

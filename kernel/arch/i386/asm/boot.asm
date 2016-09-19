@@ -29,4 +29,5 @@ _start:
   extern kmain
   call kmain
   cli
+  sub esp, 4
   jmp $

@@ -10,7 +10,7 @@ BOOTDIR?=$(EXEC_PREFIX)/boot
 INCLUDEDIR?=$(PREFIX)/include
 
 CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin -Werror -Wall -Wextra -Wno-format
-CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude -Wno-pointer-arith
+CPPFLAGS:=$(CPPFLAGS) -D__is_chronos_kernel -Iinclude -Wno-pointer-arith -Wno-type-limits
 LDFLAGS:=$(LDFLAGS)
 LIBS:=$(LIBS) -nostdlib -lk -lgcc
 
@@ -27,10 +27,14 @@ OBJS:=\
 $(KERNEL_ARCH_OBJS) \
 kernel/kernel.o \
 kernel/panic.o \
+kernel/icxxabi.o \
 kernel/memory/heap.o \
 kernel/hardware/device.o \
 kernel/hardware/tty.o \
-kernel/graphics/video.o
+kernel/graphics/video.o \
+kernel/graphics/window.o \
+kernel/graphics/context.o \
+kernel/graphics/desktop.o
 
 CRTI_OBJ:=$(ARCHDIR)/asm/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)

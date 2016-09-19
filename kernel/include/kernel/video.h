@@ -63,7 +63,7 @@ typedef struct vga_320x200x256_s {
 } vga_320x200x256_t;
 
 void init_video    (bool);
-void swap_buffers (struct video *video, size_t minx, size_t miny, size_t maxx, size_t maxy);
+void swap_buffers (struct video *video, size_t x, size_t y, size_t width, size_t height);
 
 void screen_loop ();
 

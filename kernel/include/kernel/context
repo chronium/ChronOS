@@ -1,0 +1,25 @@
+#ifndef _KERNEL_CONTEXT_H
+#define _KERNEL_CONTEXT_H
+
+#include <kernel/video.h>
+
+class Context {
+public:
+  Context (struct video *vga);
+
+  void fill_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+
+  inline uint16_t GetWidth () const { return this->width; };
+  inline uint16_t GetHeight () const { return this->height; };
+
+  inline struct video *getVGA () const { return this->vga; };
+private:
+  uint32_t *buffer;
+
+  struct video *vga;
+
+  uint16_t width;
+  uint16_t height;
+};
+
+#endif
