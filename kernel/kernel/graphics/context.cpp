@@ -1,4 +1,4 @@
-#include <kernel/context>
+#include <kernel/context.h>
 #include <kernel/video.h>
 #include <arch/i386/serial.h>
 

@@ -1,8 +1,8 @@
 #ifndef _KERNEL_FS_TAR_H
 #define _KERNEL_FS_TAR_H
 
-#include <kernel/list>
-#include <kernel/ramdisk>
+#include <kernel/list.h>
+#include <kernel/ramdisk.h>
 
 #include <stddef.h>
 

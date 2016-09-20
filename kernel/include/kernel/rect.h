@@ -2,7 +2,7 @@
 #define _KERNEL_RECT_H
 
 #include <stdint.h>
-#include <kernel/list>
+#include <kernel/list.h>
 
 class Rect {
 public:

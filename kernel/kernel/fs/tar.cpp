@@ -1,4 +1,4 @@
-#include <kernel/fs/tar>
+#include <kernel/fs/tar.h>
 
 #include <stddef.h>
 

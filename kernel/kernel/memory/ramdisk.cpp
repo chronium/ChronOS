@@ -1,4 +1,4 @@
-#include <kernel/ramdisk>
+#include <kernel/ramdisk.h>
 #include <kernel/device.h>
 
 #include <string.h>

@@ -7,12 +7,12 @@
 #include <kernel/tty.h>
 #include <kernel/heap.h>
 #include <kernel/video.h>
-#include <kernel/context>
-#include <kernel/window>
-#include <kernel/list>
-#include <kernel/desktop>
-#include <kernel/ramdisk>
-#include <kernel/fs/tar>
+#include <kernel/context.h>
+#include <kernel/window.h>
+#include <kernel/list.h>
+#include <kernel/desktop.h>
+#include <kernel/ramdisk.h>
+#include <kernel/fs/tar.h>
 
 #define _GRAPHICS 0
 

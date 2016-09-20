@@ -1,9 +1,9 @@
 #ifndef _KERNEL_DESKTOP_H
 #define _KERNEL_DESKTOP_H
 
-#include <kernel/window>
-#include <kernel/context>
-#include <kernel/list>
+#include <kernel/window.h>
+#include <kernel/context.h>
+#include <kernel/list.h>
 
 #include <stdint.h>
 

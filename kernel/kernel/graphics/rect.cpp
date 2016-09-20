@@ -1,5 +1,5 @@
-#include <kernel/rect>
-#include <kernel/list>
+#include <kernel/rect.h>
+#include <kernel/list.h>
 
 List<Rect> *Rect::split (Rect *other) {
   List<Rect> *output = new List<Rect> ();

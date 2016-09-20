@@ -1,7 +1,7 @@
 #ifndef _KERNEL_LIST_H
 #define _KERNEL_LIST_H
 
-#include <kernel/list_node>
+#include <kernel/list_node.h>
 
 #include <stdbool.h>
 #include <stddef.h>

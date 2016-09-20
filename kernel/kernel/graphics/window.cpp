@@ -1,5 +1,5 @@
-#include <kernel/window>
-#include <kernel/list>
+#include <kernel/window.h>
+#include <kernel/list.h>
 
 Window::Window (Context *context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) :
   x (x), y (y), width (width), height (height), context (context) {

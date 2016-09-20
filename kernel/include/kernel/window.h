@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include <kernel/context>
+#include <kernel/context.h>
 
 class Window {
 public:

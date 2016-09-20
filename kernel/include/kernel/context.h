@@ -2,8 +2,8 @@
 #define _KERNEL_CONTEXT_H
 
 #include <kernel/video.h>
-#include <kernel/list>
-#include <kernel/rect>
+#include <kernel/list.h>
+#include <kernel/rect.h>
 
 class Context {
 public:
