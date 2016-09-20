@@ -1,4 +1,5 @@
 #include <kernel/desktop>
+#include <kernel/rect>
 #include <kernel/video.h>
 
 Window *Desktop::createWindow (uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
@@ -11,13 +12,30 @@ Window *Desktop::createWindow (uint16_t x, uint16_t y, uint16_t width, uint16_t 
 
 void Desktop::paint () {
   Window *current;
+  size_t i;
+  Rect *temp;
 
-  this->context->fill_rect (0, 0, this->context->GetWidth (), this->context->GetHeight (), 0x3399FFFF);
+  this->context->fill_rect (0, 0, this->context->GetWidth (), this->context->GetHeight (), 0);
 
-  for (int i = 0; (current = (Window *) this->windows->get (i)); i++)
-    current->paint ();
+  this->context->clear_clip_rects ();
 
-  this->context->fill_rect (this->mouse_x, this->mouse_y, 10, 10, 0);
+  for (i = 0; (current = (Window *) this->windows->get (i)); i++) {
+    temp = new Rect (current->getY (), current->getX (),
+                     current->getY () + current->getHeight () - 1,
+                     current->getX () + current->getWidth () - 1);
+    this->context->add_clip_rect (temp);
+  }
+
+  for (i = 0; i < this->context->getClipRects ()->getSize (); i++) {
+    temp = (Rect *) this->context->getClipRects ()->get (i);
+
+    this->context->draw_rect (temp->getLeft (), temp->getTop (),
+                              temp->getRight () - temp->getLeft () + 1,
+                              temp->getBottom () - temp->getTop () + 1,
+                              0x0000FF00);
+  }
+
+  this->context->fill_rect (this->mouse_x, this->mouse_y, 10, 10, 0xFFFFFFFF);
 
   swap_buffers (this->context->getVGA (), 0, 0, this->context->GetWidth (), this->context->GetHeight ());
 }

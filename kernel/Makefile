@@ -29,12 +29,15 @@ kernel/kernel.o \
 kernel/panic.o \
 kernel/icxxabi.o \
 kernel/memory/heap.o \
+kernel/memory/ramdisk.o \
 kernel/hardware/device.o \
 kernel/hardware/tty.o \
 kernel/graphics/video.o \
 kernel/graphics/window.o \
 kernel/graphics/context.o \
-kernel/graphics/desktop.o
+kernel/graphics/desktop.o \
+kernel/graphics/rect.o \
+kernel/fs/tar.o \
 
 CRTI_OBJ:=$(ARCHDIR)/asm/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)

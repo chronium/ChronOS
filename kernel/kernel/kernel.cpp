@@ -11,8 +11,10 @@
 #include <kernel/window>
 #include <kernel/list>
 #include <kernel/desktop>
+#include <kernel/ramdisk>
+#include <kernel/fs/tar>
 
-#define _GRAPHICS 1
+#define _GRAPHICS 0
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -37,6 +39,18 @@ void kearly (multiboot_info_t *_mboot_info) {
 
 Driver::Terminal *terminal = new Driver::Terminal (0, "tty0");
 
+struct tar_header
+{
+    char filename[100];
+    char mode[8];
+    char uid[8];
+    char gid[8];
+    char size[12];
+    char mtime[12];
+    char chksum[8];
+    char typeflag[1];
+};
+
 extern "C"
 void kmain (void) {
 	init_gdt ();
@@ -57,6 +71,13 @@ void kmain (void) {
 	asm volatile ("sti");
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
+
+	auto *ramdisk = new Driver::Ramdisk (1, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
+
+	auto *tar = FileSystem::Tar::Parse (ramdisk);
+
+	for (size_t i = 0; i < 8; i++)
+		printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i));
 
 #if _GRAPHICS == 1
 	//screen_loop ();

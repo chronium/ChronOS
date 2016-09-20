@@ -13,11 +13,12 @@ public:
   ~List () {
     ListNode<T> *current = this->root;
 
-    while (current->next) {
-      ListNode<T> *old = current;
-      current = current->next;
-      delete old;
-    }
+    if (current != nullptr)
+      while (current->next) {
+        ListNode<T> *old = current;
+        current = current->next;
+        delete old;
+      }
 
     root = nullptr;
     size = 0;

@@ -91,10 +91,10 @@ static void mouse_handler (regs_t *ctx) {
       if (mouse_y < 0)
         mouse_y = 0;
 
-      if (mouse_x > 320)
-        mouse_x = 320;
-      if (mouse_y > 200)
-        mouse_y = 200;
+      if (mouse_x >= 320)
+        mouse_x = 320 - 1;
+      if (mouse_y >= 200)
+        mouse_y = 200 - 1;
 
       mouse_cycle = 0;
       break;
