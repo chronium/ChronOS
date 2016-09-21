@@ -76,8 +76,9 @@ void kmain (void) {
 
 	auto *tar = FileSystem::Tar::Parse (ramdisk);
 
-	for (size_t i = 0; i < 8; i++)
-		printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i));
+	for (size_t i = 0; i < tar->GetHeaders ()->getSize (); i++)
+		if (FileSystem::Tar::GetType (tar->GetHeaders ()->get (i)) == FileSystem::Tar::FileType::DirType)
+			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->filename);
 
 #if _GRAPHICS == 1
 	//screen_loop ();

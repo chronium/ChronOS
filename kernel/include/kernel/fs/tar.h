@@ -21,6 +21,19 @@ typedef struct tar_header {
 
 class Tar {
 public:
+  enum FileType {
+    RegType,
+    ARegType,
+    LinkType,
+    SymType,
+    ChrType,
+    BlkType,
+    DirType,
+    FifoType,
+    ContType,
+    Unknown
+  };
+
   Tar () { this->headers = new List<tar_header_t> (); };
   ~Tar () { delete this->headers; };
 
@@ -28,6 +41,7 @@ public:
 
   static size_t GetSize (tar_header_t *header);
   static Tar *Parse (Driver::Ramdisk *ramdisk);
+  static FileType GetType (tar_header_t *header);
 private:
   List<tar_header_t> *headers;
 };

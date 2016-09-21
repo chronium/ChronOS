@@ -40,4 +40,29 @@ Tar *Tar::Parse (Driver::Ramdisk *ramdisk) {
   return tar;
 }
 
+Tar::FileType Tar::GetType (tar_header_t *header) {
+  switch (header->typeflag[0]) {
+    case '0':
+      return FileType::RegType;
+    case '\0':
+      return FileType::ARegType;
+    case '1':
+      return FileType::LinkType;
+    case '2':
+      return FileType::SymType;
+    case '3':
+      return FileType::ChrType;
+    case '4':
+      return FileType::BlkType;
+    case '5':
+      return FileType::DirType;
+    case '6':
+      return FileType::FifoType;
+    case '7':
+      return FileType::ContType;
+  }
+
+  return FileType::Unknown;
+}
+
 }

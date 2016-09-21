@@ -49,7 +49,7 @@ iso: kernel
 	mkdir -p isodir/boot
 	mkdir -p isodir/boot/grub
 	cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
-	tar --verbose --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot | grep -v boot)
+	tar --verbose --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
 	cp grub/grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o chronos.iso isodir
 
