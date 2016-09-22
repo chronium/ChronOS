@@ -12,6 +12,7 @@ typedef enum device_type {
 
 namespace Driver {
 
+template <typename T>
 class Device {
 public:
   enum class DeviceType {
@@ -23,14 +24,14 @@ public:
   Device (int id, const char *name, DeviceType type);
   virtual ~Device ();
 
-  virtual size_t Read (void *buffer, size_t len, uint32_t address) {
+  virtual size_t Read (T *buffer, size_t len, uint32_t address) {
     (void) buffer;
     (void) len;
     (void) address;
 
     return 0;
   }
-  virtual size_t Write (const void *buffer, size_t len, uint32_t address) {
+  virtual size_t Write (const T *buffer, size_t len, uint32_t address) {
     (void) buffer;
     (void) len;
     (void) address;
