@@ -18,6 +18,8 @@ public:
 
   Window *createWindow (uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
+  List<Window> *getWindowsAbove (Window *window);
+
   void update (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons);
   void paint ();
 

@@ -12,20 +12,53 @@ Context::Context (struct video *vga) {
   this->clip_rects = new List<Rect> ();
 }
 
-void Context::fill_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
-  uint16_t cur_x;
-  uint16_t cur_y;
-  uint16_t max_x = x + width;
-  uint16_t max_y = y + height;
+void Context::clip_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, Rect *clip_area, uint32_t color) {
+  int cur_x;
+  int max_x = x + width;
+  int max_y = y + height;
 
-  if (max_x > this->width)
-    max_x = this->width;
-  if (max_y > this->height)
-    max_y = this->height;
+  if (x < clip_area->getLeft ())
+    x = clip_area->getLeft ();
+  if (y < clip_area->getTop ())
+    y = clip_area->getTop ();
 
-  for (cur_y = y; cur_y < max_y; cur_y++)
+  if (max_x > clip_area->getRight () + 1)
+    max_x = clip_area->getRight () + 1;
+
+  if (max_y > clip_area->getBottom () + 1)
+    max_y = clip_area->getBottom () + 1;
+
+  for (; y < max_y; y++)
     for (cur_x = x; cur_x < max_x; cur_x++)
-      this->buffer[cur_x + cur_y * this->width] = color;
+      this->buffer[cur_x + y * this->GetWidth ()] = color;
+}
+
+void Context::fill_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+  size_t start_x, cur_x, cur_y, end_x, end_y;
+  size_t max_x = x + width;
+  size_t max_y = y + height;
+  size_t i;
+
+  (void) start_x;
+  (void) cur_x;
+  (void) cur_y;
+  (void) end_x;
+  (void) end_y;
+  (void) max_x;
+  (void) max_y;
+
+  Rect *clip_area;
+
+  if (this->clip_rects->getSize ()) {
+    for (i = 0; i < this->clip_rects->getSize (); i++) {
+      clip_area = this->clip_rects->get (i);
+      this->clip_rect (x, y, width, height, clip_area, color);
+    }
+  } else {
+    Rect screen_area (0, 0, this->height - 1, this->width - 1);
+
+    this->clip_rect (x, y, width, height, &screen_area, color);
+  }
 }
 
 void Context::draw_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
@@ -44,6 +77,12 @@ void Context::vline (uint16_t x, uint16_t y, uint16_t height, uint32_t color) {
 }
 
 void Context::add_clip_rect (Rect *rect) {
+  this->subtract_clip_rect (rect);
+
+  this->clip_rects->insert (rect);
+}
+
+void Context::subtract_clip_rect (Rect *rect) {
   size_t i;
   Rect *current;
   List<Rect> *split_rects;
@@ -67,17 +106,17 @@ void Context::add_clip_rect (Rect *rect) {
       this->clip_rects->insert (split_rects->remove (0));
     }
 
+    delete split_rects;
+
     i = 0;
   }
-
-  this->clip_rects->insert (rect);
 }
 
 void Context::clear_clip_rects () {
   Rect *current;
 
   while (this->clip_rects->getSize ()) {
-    current = (Rect *) this->clip_rects->remove (0);
+    current = this->clip_rects->remove (0);
     delete current;
   }
 }
