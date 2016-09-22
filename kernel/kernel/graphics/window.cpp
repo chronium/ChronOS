@@ -1,14 +1,11 @@
 #include <kernel/window.h>
 #include <kernel/list.h>
 
-Window::Window (Context *context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) :
-  x (x), y (y), width (width), height (height), context (context) {
-  this->fill_color = 0xFF000000 |            //Opacity
-                   pseudo_rand_8() << 16 | //B
-                   pseudo_rand_8() << 8  | //G
-                   pseudo_rand_8();        //R
-}
-
 void Window::paint () {
-  this->context->fill_rect (this->x, this->y, this->width, this->height, this->fill_color);
+  this->context->draw_rect (this->x, this->y, this->width, this->height, WIN_BORDERCOLOR);
+
+  this->context->hline (this->x + 1, this->y + 11, this->width - 2, WIN_BORDERCOLOR);
+
+  this->context->fill_rect (this->x + 1, this->y + 1, this->width - 2, 10, WIN_TITLECOLOR);
+  this->context->fill_rect (this->x + 1, this->y + 12, this->width - 2, this->height - 13, WIN_BGCOLOR);
 }

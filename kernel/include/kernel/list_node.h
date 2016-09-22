@@ -13,6 +13,7 @@ public:
   ~ListNode () {
     prev = nullptr;
     next = nullptr;
+    data = nullptr;
   }
 
   inline T* getData () { return this->data; };

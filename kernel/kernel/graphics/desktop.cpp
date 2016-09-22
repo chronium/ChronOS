@@ -11,32 +11,62 @@ Window *Desktop::createWindow (uint16_t x, uint16_t y, uint16_t width, uint16_t 
 }
 
 void Desktop::paint () {
-  Window *current;
   size_t i;
-  Rect *temp;
+  Window *current, *clipping_win;
+  Rect *temp_rect;
+  List<Window> *clip_windows;
 
-  this->context->fill_rect (0, 0, this->context->GetWidth (), this->context->GetHeight (), 0);
+  temp_rect = new Rect (0, 0, this->context->GetHeight () - 1, this->context->GetWidth () - 1);
+  this->context->add_clip_rect (temp_rect);
+
+  for (i = 0; i < this->windows->getSize (); i++) {
+    current = this->windows->get (i);
+
+    temp_rect = new Rect (current->getY (), current->getX (),
+                     current->getY () + current->getHeight () - 1,
+                     current->getX () + current->getWidth () - 1);
+
+    this->context->subtract_clip_rect (temp_rect);
+
+    delete temp_rect;
+  }
+  this->context->fill_rect (0, 0, this->context->GetWidth (), this->context->GetHeight (), 0x3399FF);
 
   this->context->clear_clip_rects ();
 
-  for (i = 0; (current = (Window *) this->windows->get (i)); i++) {
-    temp = new Rect (current->getY (), current->getX (),
+  for (i = 0; i < this->windows->getSize (); i++) {
+    current = this->windows->get (i);
+
+    temp_rect = new Rect (current->getY (), current->getX (),
                      current->getY () + current->getHeight () - 1,
                      current->getX () + current->getWidth () - 1);
-    this->context->add_clip_rect (temp);
-  }
 
-  for (i = 0; i < this->context->getClipRects ()->getSize (); i++) {
-    temp = (Rect *) this->context->getClipRects ()->get (i);
+    this->context->add_clip_rect (temp_rect);
 
-    this->context->draw_rect (temp->getLeft (), temp->getTop (),
-                              temp->getRight () - temp->getLeft () + 1,
-                              temp->getBottom () - temp->getTop () + 1,
-                              0x0000FF00);
+    clip_windows = this->getWindowsAbove (current);
+
+    while (clip_windows->getSize ()) {
+      clipping_win = clip_windows->remove (0);
+
+      if (clipping_win == current)
+        continue;
+
+      temp_rect = new Rect (clipping_win->getY (), clipping_win->getX (),
+                       clipping_win->getY () + clipping_win->getHeight () - 1,
+                       clipping_win->getX () + clipping_win->getWidth () - 1);
+
+      this->context->subtract_clip_rect (temp_rect);
+
+      delete temp_rect;
+    }
+
+    current->paint ();
+
+    delete clip_windows;
+    this->context->clear_clip_rects ();
   }
 
   this->context->fill_rect (this->mouse_x, this->mouse_y, 10, 10, 0xFFFFFFFF);
-
   swap_buffers (this->context->getVGA (), 0, 0, this->context->GetWidth (), this->context->GetHeight ());
 }
 
@@ -50,10 +80,10 @@ void Desktop::update (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons) {
   if (mouse_buttons) {
     if (!this->last_buttons_state)
       for (i = this->windows->getSize () - 1; i >= 0; i--) {
-        child = (Window *) this->windows->get (i);
+        child = this->windows->get (i);
 
         if (mouse_x >= child->getX () && mouse_x < (child->getX () + child->getWidth ()) &&
-           mouse_y >= child->getY () && mouse_y < (child->getY () + child->getHeight ())) {
+           mouse_y >= child->getY () && mouse_y < (child->getY () + 12)) {
              this->windows->remove (i);
              this->windows->insert (child);
 
@@ -76,4 +106,26 @@ void Desktop::update (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons) {
   this->paint ();
 
   this->last_buttons_state = mouse_buttons;
+}
+
+List<Window> *Desktop::getWindowsAbove (Window *window) {
+  size_t i;
+  Window *current;
+  List<Window> *return_list = new List<Window> ();
+
+  for (i = 0; i < this->windows->getSize (); i++)
+    if (window == this->windows->get (i))
+      break;
+
+  for (; i < this->windows->getSize (); i++) {
+    current = this->windows->get (i);
+
+    if (current->getX () <= (window->getX () + window->getWidth() - 1) &&
+       (current->getX () + current->getWidth () - 1) >= window->getX () &&
+       current->getY () <= (window->getY () + window->getHeight () - 1) &&
+       (window->getY () + window->getHeight() - 1) >= window->getY ())
+        return_list->insert (current);
+  }
+
+  return return_list;
 }

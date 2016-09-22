@@ -14,7 +14,7 @@
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
 
-#define _GRAPHICS 0
+#define _GRAPHICS 1
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
