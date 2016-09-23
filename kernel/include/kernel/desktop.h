@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+
+
 class Desktop {
 public:
   Desktop (Context *context): context (context) {
@@ -16,7 +18,7 @@ public:
     delete windows;
   }
 
-  Window *createWindow (uint16_t x, uint16_t y, uint16_t width, uint16_t height);
+  Window *createWindow (int16_t x, int16_t y, uint16_t width, uint16_t height);
 
   List<Window> *getWindowsAbove (Window *window);
 

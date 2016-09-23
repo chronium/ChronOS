@@ -11,7 +11,7 @@
 
 class Window {
 public:
-  Window (Context *context, uint16_t x, uint16_t y, uint16_t width, uint16_t height)
+  Window (Context *context, int16_t x, int16_t y, uint16_t width, uint16_t height)
     : x (x), y (y), width (width), height (height), context (context) { };
 
   inline uint8_t pseudo_rand_8 () {
@@ -22,17 +22,17 @@ public:
 
   void paint ();
 
-  inline void setX (uint16_t val) { this->x = val; };
-  inline void setY (uint16_t val) { this->y = val; };
+  inline void setX (int16_t val) { this->x = val; };
+  inline void setY (int16_t val) { this->y = val; };
 
-  inline uint16_t getX () const { return this->x; };
-  inline uint16_t getY () const { return this->y; };
+  inline int16_t getX () const { return this->x; };
+  inline int16_t getY () const { return this->y; };
   inline uint16_t getWidth () const { return this->width; };
   inline uint16_t getHeight () const { return this->height; };
 
 private:
-  uint16_t x;
-  uint16_t y;
+  int16_t x;
+  int16_t y;
 
   uint16_t width;
   uint16_t height;
