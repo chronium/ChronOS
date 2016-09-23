@@ -2,8 +2,9 @@
 #include <kernel/rect.h>
 #include <kernel/video.h>
 
-static uint16_t cursor_white[] = { 0x0001, 0x0003, 0x0005, 0x0009, 0x0011, 0x0021, 0x0041, 0x0081, 0x0101, 0x0201, 0x0401, 0x0801, 0x0F81, 0x0091, 0x0129, 0x0125, 0x0243, 0x0240, 0x0180 };
-static uint16_t cursor_black[] = { 0x0000, 0x0000, 0x0002, 0x0006, 0x000E, 0x001E, 0x003E, 0x007E, 0x00FE, 0x01FE, 0x03FE, 0x07FE, 0x007E, 0x006E, 0x00C6, 0x00C2, 0x0180, 0x0180, 0x0000 };
+static uint16_t cursor_black[] = { 0x01FF, 0x0081, 0x0041, 0x0021, 0x0011, 0x0009, 0x0005, 0x0003, 0x0001 };
+static uint16_t cursor_40[] = { 0x0020, 0x0010, 0x0008, 0x0004, 0x0002, 0x0001 };
+static uint16_t cursor_80[] = { 0x001C, 0x000E, 0x0007, 0x0003, 0x0001 };
 
 Window *Desktop::createWindow (int16_t x, int16_t y, uint16_t width, uint16_t height) {
   Window *window = new Window (this->context, x, y, width, height);
@@ -70,8 +71,13 @@ void Desktop::paint () {
   }
 
   //this->context->fill_rect (this->mouse_x, this->mouse_y, 10, 10, 0xFFFFFFFF);
-  this->context->draw_bitmap (this->mouse_x, this->mouse_y, 12, 19, cursor_white, 0xFFFFFFFF);
-  this->context->draw_bitmap (this->mouse_x, this->mouse_y, 12, 19, cursor_black, 0xFF000000);
+  this->context->draw_bitmap (this->mouse_x, this->mouse_y, 9, 9, cursor_black, 0xFF000000);
+  this->context->draw_bitmap (this->mouse_x + 1, this->mouse_y + 1, 6, 6, cursor_40, 0xFF404040);
+  this->context->draw_bitmap (this->mouse_x + 1, this->mouse_y + 1, 5, 5, cursor_80, 0xFF808080);
+  this->context->set_pixel (this->mouse_x + 2, this->mouse_y + 1, 0xFFC1C1C1);
+  this->context->set_pixel (this->mouse_x + 1, this->mouse_y + 2, 0xFFC1C1C1);
+  this->context->set_pixel (this->mouse_x + 1, this->mouse_y + 1, 0xFFFFFFFF);
+
   swap_buffers (this->context->getVGA (), 0, 0, this->context->GetWidth (), this->context->GetHeight ());
 }
 
