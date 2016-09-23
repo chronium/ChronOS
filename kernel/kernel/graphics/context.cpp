@@ -12,13 +12,14 @@ Context::Context (struct video *vga) {
   this->clip_rects = new List<Rect> ();
 }
 
-void Context::clip_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, Rect *clip_area, uint32_t color) {
+void Context::clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, Rect *clip_area, uint32_t color) {
   int cur_x;
   int max_x = x + width;
   int max_y = y + height;
 
   if (x < clip_area->getLeft ())
     x = clip_area->getLeft ();
+  
   if (y < clip_area->getTop ())
     y = clip_area->getTop ();
 
@@ -30,10 +31,16 @@ void Context::clip_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height
 
   for (; y < max_y; y++)
     for (cur_x = x; cur_x < max_x; cur_x++)
-      this->buffer[cur_x + y * this->GetWidth ()] = color;
+      this->set_pixel(cur_x, y, color);
 }
 
-void Context::fill_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+inline
+void Context::set_pixel (int16_t x, int16_t y, uint32_t color) {
+  if(x >= 0 && x < this->GetWidth() && y >= 0 && y < this->GetHeight())
+    this->buffer[x + y * this->GetWidth()] = color;
+}
+
+void Context::fill_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, uint32_t color) {
   size_t start_x, cur_x, cur_y, end_x, end_y;
   size_t max_x = x + width;
   size_t max_y = y + height;
@@ -61,18 +68,27 @@ void Context::fill_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height
   }
 }
 
-void Context::draw_rect (uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+void Context::draw_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, uint32_t color) {
   this->hline (x, y, width, color);
   this->vline (x, y + 1, height - 2, color);
   this->hline (x, y + height - 1, width, color);
   this->vline (x + width - 1, y + 1, height - 2, color);
 }
 
-void Context::hline (uint16_t x, uint16_t y, uint16_t length, uint32_t color) {
+void Context::draw_bitmap (int16_t x, int16_t y, uint16_t width, uint16_t height, const uint16_t *bitmap, uint32_t color) {
+  for (int16_t cur_y = 0; cur_y < height; cur_y++) {
+    for (int16_t cur_x = 0; cur_x < width; cur_x++) {
+      if (*(bitmap + cur_y) & (1 << cur_x))
+        this->set_pixel(x + cur_x, y + cur_y, color);
+    }
+  }
+}
+
+void Context::hline (int16_t x, int16_t y, uint16_t length, uint32_t color) {
   this->fill_rect (x, y, length, 1, color);
 }
 
-void Context::vline (uint16_t x, uint16_t y, uint16_t height, uint32_t color) {
+void Context::vline (int16_t x, int16_t y, uint16_t height, uint32_t color) {
   this->fill_rect (x, y, 1, height, color);
 }
 
