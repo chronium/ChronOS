@@ -19,7 +19,7 @@ void Context::clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, 
 
   if (x < clip_area->getLeft ())
     x = clip_area->getLeft ();
-  
+
   if (y < clip_area->getTop ())
     y = clip_area->getTop ();
 
@@ -32,12 +32,6 @@ void Context::clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, 
   for (; y < max_y; y++)
     for (cur_x = x; cur_x < max_x; cur_x++)
       this->set_pixel(cur_x, y, color);
-}
-
-inline
-void Context::set_pixel (int16_t x, int16_t y, uint32_t color) {
-  if(x >= 0 && x < this->GetWidth() && y >= 0 && y < this->GetHeight())
-    this->buffer[x + y * this->GetWidth()] = color;
 }
 
 void Context::fill_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, uint32_t color) {

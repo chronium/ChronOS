@@ -15,7 +15,10 @@ public:
 
   void draw_bitmap (int16_t x, int16_t y, uint16_t width, uint16_t height, const uint16_t *bitmap, uint32_t color);
 
-  void set_pixel (int16_t x, int16_t y, uint32_t color);
+  inline void set_pixel (int16_t x, int16_t y, uint32_t color) {
+    if(x >= 0 && x < this->GetWidth() && y >= 0 && y < this->GetHeight())
+      this->buffer[x + y * this->GetWidth()] = color;
+  }
 
   void hline (int16_t x, int16_t y, uint16_t length, uint32_t color);
   void vline (int16_t x, int16_t y, uint16_t height, uint32_t color);
