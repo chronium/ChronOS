@@ -7,7 +7,7 @@
 
 class Context {
 public:
-  Context (struct video *vga);
+  Context (uint32_t *buffer, uint16_t width, uint16_t height);
 
   void fill_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, uint32_t color);
   void clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, Rect *clip_area, uint32_t color);
@@ -15,7 +15,7 @@ public:
 
   void draw_bitmap (int16_t x, int16_t y, uint16_t width, uint16_t height, const uint16_t *bitmap, uint32_t color);
 
-  inline void set_pixel (int16_t x, int16_t y, uint32_t color) {
+  inline void set_pixel (int16_t x, int16_t y, uint32_t color) __attribute__((always_inline)) {
     if(x >= 0 && x < this->GetWidth() && y >= 0 && y < this->GetHeight())
       this->buffer[x + y * this->GetWidth()] = color;
   }
@@ -32,11 +32,9 @@ public:
 
   inline List<Rect> *getClipRects () const { return this->clip_rects; };
 
-  inline struct video *getVGA () const { return this->vga; };
+  inline virtual void swap_buff () { }
 private:
   uint32_t *buffer;
-
-  struct video *vga;
 
   uint16_t width;
   uint16_t height;

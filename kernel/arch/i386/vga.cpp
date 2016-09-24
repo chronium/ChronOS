@@ -145,6 +145,8 @@ void clear_screen (struct video *video, uint32_t c) {
 			video->buffer[x + y * video->width] = c;
 }
 
+#pragma GCC push_options
+#pragma GCC optimize("O3")
 void swap_buffers (struct video *video, size_t x, size_t y, size_t width, size_t height) {
 	vga_320x200x256_t *vga = (vga_320x200x256_t *) video->dev->dev_tag;
 
@@ -171,6 +173,7 @@ void swap_buffers (struct video *video, size_t x, size_t y, size_t width, size_t
 			vga->address[cur_x + cur_y * video->width] = val;
 		}
 }
+#pragma GCC pop_options
 
 void draw_x_line(struct video *video, size_t x, size_t y, size_t width, uint32_t color) {
 	if(y >= video->height)

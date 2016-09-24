@@ -2,13 +2,8 @@
 #include <kernel/video.h>
 #include <arch/i386/serial.h>
 
-Context::Context (struct video *vga) {
-  this->width = (uint16_t) vga->width;
-  this->height = (uint16_t) vga->height;
-
-  this->buffer = vga->buffer;
-  this->vga = vga;
-
+Context::Context (uint32_t *buffer, uint16_t width, uint16_t height) :
+  buffer (buffer), width (width), height (height) {
   this->clip_rects = new List<Rect> ();
 }
 

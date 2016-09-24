@@ -37,6 +37,7 @@ kernel/graphics/window.o \
 kernel/graphics/context.o \
 kernel/graphics/desktop.o \
 kernel/graphics/rect.o \
+kernel/graphics/vga_context.o \
 kernel/fs/tar.o \
 
 CRTI_OBJ:=$(ARCHDIR)/asm/crti.o

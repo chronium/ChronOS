@@ -8,6 +8,7 @@
 #include <kernel/heap.h>
 #include <kernel/video.h>
 #include <kernel/context.h>
+#include <kernel/vga_context.h>
 #include <kernel/window.h>
 #include <kernel/list.h>
 #include <kernel/desktop.h>
@@ -81,11 +82,7 @@ void kmain (void) {
 			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->filename);
 
 #if _GRAPHICS == 1
-	//screen_loop ();
-
-	Context *context = new Context (video_inst);
-
-	Desktop *desktop = new Desktop (context);
+	Desktop *desktop = new Desktop (new VGAContext (video_inst));
 	desktop->createWindow (10, 10, 80, 50);
 	desktop->createWindow (100, 50, 50, 60);
 	desktop->createWindow (200, 100, 50, 50);

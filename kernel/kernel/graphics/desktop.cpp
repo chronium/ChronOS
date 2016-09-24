@@ -78,7 +78,7 @@ void Desktop::paint () {
   this->context->set_pixel (this->mouse_x + 1, this->mouse_y + 2, 0xFFC1C1C1);
   this->context->set_pixel (this->mouse_x + 1, this->mouse_y + 1, 0xFFFFFFFF);
 
-  swap_buffers (this->context->getVGA (), 0, 0, this->context->GetWidth (), this->context->GetHeight ());
+  this->context->swap_buff ();
 }
 
 void Desktop::update (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons) {
