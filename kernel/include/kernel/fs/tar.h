@@ -19,6 +19,11 @@ typedef struct tar_header {
   char typeflag[1];
 } tar_header_t;
 
+typedef struct tar_file {
+  tar_header_t *header;
+  void *content;
+} tar_file_t;
+
 class Tar {
 public:
   enum FileType {
@@ -34,16 +39,17 @@ public:
     Unknown
   };
 
-  Tar () { this->headers = new List<tar_header_t> (); };
+  Tar () { this->headers = new List<tar_file_t> (); };
   ~Tar () { delete this->headers; };
 
-  List<tar_header_t> *GetHeaders () const { return this->headers; };
+  List<tar_file_t> *GetHeaders () const { return this->headers; };
 
+  static size_t GetSize (tar_file_t *file);
   static size_t GetSize (tar_header_t *header);
   static Tar *Parse (Driver::Ramdisk *ramdisk);
-  static FileType GetType (tar_header_t *header);
+  static FileType GetType (tar_file_t *file);
 private:
-  List<tar_header_t> *headers;
+  List<tar_file_t> *headers;
 };
 
 }

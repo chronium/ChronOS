@@ -40,18 +40,21 @@ export CPPFLAGS:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
 fi)
 export DESTDIR:=$(PWD)/sysroot
 
-.PHONY: all iso run clean headers
+.PHONY: all iso run clean headers prep
 
 all: iso
 
-iso: kernel
-	mkdir -p isodir
-	mkdir -p isodir/boot
-	mkdir -p isodir/boot/grub
-	cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
+iso: kernel prep
 	tar --verbose --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
 	cp grub/grub.cfg isodir/boot/grub/grub.cfg
 	grub-mkrescue -o chronos.iso isodir
+
+prep:
+	mkdir -p isodir
+	mkdir -p isodir/boot
+	mkdir -p isodir/boot/grub
+	cp initrd/* sysroot/
+	cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
 
 kernel: headers
 	for PROJECT in $(PROJECTS); do \

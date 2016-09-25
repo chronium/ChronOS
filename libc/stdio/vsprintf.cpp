@@ -87,6 +87,7 @@ int vsprintf (char *buf, const char * __restrict format, va_list args) {
         break;
       case 'c':
         *b++ = (char) va_arg (args, int);
+        break;
       case 'x':
         i = b - buf;
         print_hex ((unsigned long) va_arg (args, unsigned long), arg_width, buf, &i);

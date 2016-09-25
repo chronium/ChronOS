@@ -15,7 +15,7 @@
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
 
-#define _GRAPHICS 1
+#define _GRAPHICS 0
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -79,7 +79,14 @@ void kmain (void) {
 
 	for (size_t i = 0; i < tar->GetHeaders ()->getSize (); i++)
 		if (FileSystem::Tar::GetType (tar->GetHeaders ()->get (i)) == FileSystem::Tar::FileType::DirType)
-			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->filename);
+			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->header->filename);
+
+	FileSystem::tar_file_t *greet_file = tar->GetHeaders ()->get (2);
+	size_t greet_file_size = FileSystem::Tar::GetSize (greet_file);
+	char *greet = new char[greet_file_size + 1];
+	greet[greet_file_size] = '\0';
+	memcpy (greet, greet_file->content, greet_file_size);
+	printf ("greet.txt: %s\n", greet);
 
 #if _GRAPHICS == 1
 	Desktop *desktop = new Desktop (new VGAContext (video_inst));

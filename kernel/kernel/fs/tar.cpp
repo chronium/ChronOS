@@ -1,8 +1,21 @@
 #include <kernel/fs/tar.h>
 
 #include <stddef.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 namespace FileSystem {
+
+size_t Tar::GetSize (tar_file_t *file) {
+  size_t size = 0;
+  size_t count = 1;
+
+  for (size_t j = 11; j > 0; j--, count *= 8)
+    size += (file->header->size[j - 1] - '0') * count;
+
+  return size;
+}
 
 size_t Tar::GetSize (tar_header_t *header) {
   size_t size = 0;
@@ -28,9 +41,17 @@ Tar *Tar::Parse (Driver::Ramdisk *ramdisk) {
     if (header->filename[0] == '\0')
       break;
 
-    tar->headers->insert (header);
+    size_t size = GetSize (header);
 
-    size_t size = Tar::GetSize (header);
+    char *content = new char[size];
+    ramdisk->Read (content, size, address + 512);
+
+    tar_file_t *file = new tar_file_t ();
+    file->header = header;
+    file->content = (void *) content;
+
+    tar->headers->insert (file);
+
     address += ((size / 512) + 1) * 512;
 
     if (size % 512)
@@ -40,8 +61,8 @@ Tar *Tar::Parse (Driver::Ramdisk *ramdisk) {
   return tar;
 }
 
-Tar::FileType Tar::GetType (tar_header_t *header) {
-  switch (header->typeflag[0]) {
+Tar::FileType Tar::GetType (tar_file_t *file) {
+  switch (file->header->typeflag[0]) {
     case '0':
       return FileType::RegType;
     case '\0':
