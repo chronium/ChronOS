@@ -50,7 +50,7 @@ iso: kernel sysroot
 	@ tar --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
 	@ cp grub/grub.cfg isodir/boot/grub/grub.cfg
 	@ echo "Generating ISO"
-	@ grub-mkrescue -o chronos.iso isodir
+	@ grub-mkrescue -o chronos.iso isodir > /dev/null 2>&1
 	@ echo "Done\n"
 
 sysroot:
