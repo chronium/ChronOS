@@ -77,13 +77,13 @@ chronos.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
 	$(NAS) $(NASFLAGS) $< -o $@
 
 clean:
-	rm -f chronos.kernel $(OBJS) $(ALL_OBJS) *.o */*.o */*/*.o
+	@ rm -f chronos.kernel $(OBJS) $(ALL_OBJS) *.o */*.o */*/*.o
 
 install: install-headers install-kernel
 
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
-	cp -RTv include $(DESTDIR)$(INCLUDEDIR)
+	cp -RT include $(DESTDIR)$(INCLUDEDIR)
 
 install-kernel: chronos.kernel
 	mkdir -p $(DESTDIR)$(BOOTDIR)

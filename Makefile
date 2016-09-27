@@ -44,41 +44,62 @@ export DESTDIR:=$(PWD)/sysroot
 
 all: iso
 
-iso: kernel prep
-	tar --verbose --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
-	cp grub/grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o chronos.iso isodir
+iso: kernel sysroot
+	@ echo "Creating ISO"
+	@ echo "Building initrd"
+	@ tar --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
+	@ cp grub/grub.cfg isodir/boot/grub/grub.cfg
+	@ echo "Generating ISO"
+	@ grub-mkrescue -o chronos.iso isodir
+	@ echo "Done\n"
 
-prep:
-	mkdir -p isodir
-	mkdir -p isodir/boot
-	mkdir -p isodir/boot/grub
-	cp initrd/* sysroot/
-	cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
+sysroot:
+	@ echo "Preparing $@"
+	@ mkdir -p isodir
+	@ mkdir -p isodir/boot
+	@ mkdir -p isodir/boot/grub
+	@ cp initrd/* sysroot/
+	@ cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
+	@ echo "Done\n"
 
 kernel: headers
-	for PROJECT in $(PROJECTS); do \
-		make -C $$PROJECT install ; \
+	@ echo "Setting up $@"
+	@ for PROJECT in $(PROJECTS); do \
+		echo "\t→$$PROJECT" ; \
+		make -s -C $$PROJECT install ; \
 	done
+	@ echo "Done\n"
 
 lib: headers
-	make -C libc ;
+	make -s -C libc
 
 headers:
-	mkdir -p sysroot
-	for PROJECT in $(SYSTEM_HEADER_PROJECTS); do \
-		make -C $$PROJECT install-headers ; \
+	@echo "Setting up $@"
+	@ mkdir -p sysroot
+	@ for PROJECT in $(SYSTEM_HEADER_PROJECTS); do \
+		echo "\t→$$PROJECT" ; \
+		make -s -C $$PROJECT install-headers ; \
 	done
+	@ echo "Done\n"
 
 run: all qemu
+
+run-curses: all qemu-curses
+
+qemu-curses:
+	qemu-system-$(ARCH) -cdrom chronos.iso -curses
 
 qemu:
 	qemu-system-$(ARCH) -cdrom chronos.iso -serial stdio
 
 clean:
-	for PROJECT in $(PROJECTS); do \
-		make -C $$PROJECT clean ; \
+	@ echo "Cleaning"
+	@ for PROJECT in $(PROJECTS); do \
+		echo "\t→$$PROJECT" ; \
+		make -s -C $$PROJECT clean ; \
 	done
-	rm -rfv sysroot
-	rm -rfv isodir
-	rm -rfv chronos.iso
+	@ echo "\t→root project"
+	@ rm -rf sysroot
+	@ rm -rf isodir
+	@ rm -rf chronos.iso
+	@ echo "Done\n"

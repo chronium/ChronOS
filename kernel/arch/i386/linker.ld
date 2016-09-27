@@ -9,7 +9,7 @@ SECTIONS {
   }
 
   .rodata BLOCK (4K) : ALIGN (4K) {
-    *(.rodata)
+    *(.rodata*)
   }
 
   .data BLOCK (4K) : ALIGN (4K) {
@@ -17,8 +17,7 @@ SECTIONS {
   }
 
   .bss BLOCK (4K) : ALIGN (4K) {
-    *(COMMON)
-    *(.bss)
-    *(.bootstrap_stack)
+    *(COMMON*)
+    *(.bss*)
   }
 }

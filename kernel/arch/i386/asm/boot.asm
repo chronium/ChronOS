@@ -11,10 +11,10 @@ align 4
   dd FLAGS
   dd CHECKSUM
 
-section .bootstrap_stack
+section .bss
 align 4
 stack_bottom:
-times 16384 db 0
+resb 16384 ; 16 KiB
 stack_top:
 
 section .text

@@ -26,8 +26,8 @@ static inline uint32_t outl (uint16_t port, uint32_t val) {
 }
 
 __attribute__ ((unused))
-static inline uint16_t inb (uint16_t port) {
-  uint16_t res;
+static inline uint8_t inb (uint16_t port) {
+  uint8_t res;
   asm volatile ("inb %1, %0" : "=a" (res) : "dN" (port));
   return res;
 }
@@ -35,7 +35,7 @@ static inline uint16_t inb (uint16_t port) {
 __attribute__ ((unused))
 static inline uint8_t inw (uint16_t port) {
   uint16_t res;
-  asm volatile ("inbw %1, %0" : "=a" (res) : "dN" (port));
+  asm volatile ("inw %1, %0" : "=a" (res) : "dN" (port));
   return res;
 }
 

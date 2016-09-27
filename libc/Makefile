@@ -87,13 +87,13 @@ libk.a: $(LIBK_OBJS)
 	$(CC) -c $< -o $@ $(LIBK_CFLAGS) $(LIBK_CPPFLAGS)
 
 clean:
-	rm -f $(BINARIES) $(OBJS) $(LIBK_OBJS) *.o */*.o */*/*.o
+	@ rm -f $(BINARIES) $(OBJS) $(LIBK_OBJS) *.o */*.o */*/*.o
 
 install: install-headers install-libs
 
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
-	cp -RTv include $(DESTDIR)$(INCLUDEDIR)
+	cp -RT include $(DESTDIR)$(INCLUDEDIR)
 
 install-libs: $(BINARIES)
 	mkdir -p $(DESTDIR)$(LIBDIR)
