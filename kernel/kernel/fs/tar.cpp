@@ -50,7 +50,7 @@ Tar *Tar::Parse (Driver::Ramdisk *ramdisk) {
     file->header = header;
     file->content = (void *) content;
 
-    tar->headers->insert (file);
+    tar->headers->add (file);
 
     address += ((size / 512) + 1) * 512;
 

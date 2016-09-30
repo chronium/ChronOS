@@ -40,7 +40,7 @@ export CPPFLAGS:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
 fi)
 export DESTDIR:=$(PWD)/sysroot
 
-.PHONY: all iso run clean headers prep
+.PHONY: all iso run clean headers prep sysroot headers lib
 
 all: iso
 

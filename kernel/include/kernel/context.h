@@ -25,10 +25,14 @@ public:
 
   void add_clip_rect (Rect *rect);
   void subtract_clip_rect (Rect *rect);
+  void intersect_clip_rect (Rect *rect);
   void clear_clip_rects ();
 
   inline uint16_t GetWidth () const { return this->width; };
   inline uint16_t GetHeight () const { return this->height; };
+
+  inline void SetXTrans (int16_t val) { this->translate_x = val; };
+  inline void SetYTrans (int16_t val) { this->translate_y = val; };
 
   inline List<Rect> *getClipRects () const { return this->clip_rects; };
 
@@ -38,6 +42,9 @@ private:
 
   uint16_t width;
   uint16_t height;
+
+  int16_t translate_x;
+  int16_t translate_y;
 
   List<Rect> *clip_rects;
 };

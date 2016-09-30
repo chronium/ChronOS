@@ -15,7 +15,7 @@
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
 
-#define _GRAPHICS 0
+#define _GRAPHICS 1
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -77,7 +77,7 @@ void kmain (void) {
 
 	auto *tar = FileSystem::Tar::Parse (ramdisk);
 
-	for (size_t i = 0; i < tar->GetHeaders ()->getSize (); i++)
+	for (int i = 0; i < tar->GetHeaders ()->Count (); i++)
 		if (FileSystem::Tar::GetType (tar->GetHeaders ()->get (i)) == FileSystem::Tar::FileType::DirType)
 			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->header->filename);
 
@@ -90,12 +90,12 @@ void kmain (void) {
 
 #if _GRAPHICS == 1
 	Desktop *desktop = new Desktop (new VGAContext (video_inst));
-	desktop->createWindow (10, 10, 80, 50);
-	desktop->createWindow (100, 50, 50, 60);
-	desktop->createWindow (200, 100, 50, 50);
+	desktop->CreateWindow (10, 10, 80, 50);
+	desktop->CreateWindow (100, 50, 50, 60);
+	desktop->CreateWindow (200, 100, 50, 50);
 
 	while (true) {
-		desktop->update (mouse_x, mouse_y, mouse_left);
+		desktop->update_mouse (mouse_x, mouse_y, mouse_left);
 	}
 
 #endif

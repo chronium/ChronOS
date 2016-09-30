@@ -7,36 +7,15 @@
 
 #include <stdint.h>
 
-
-
-class Desktop {
+class Desktop : public Window {
 public:
-  Desktop (Context *context): context (context) {
-    this->windows = new List<Window> ();
-  }
-  ~Desktop () {
-    delete windows;
-  }
+  Desktop (Context *context);
 
   Window *createWindow (int16_t x, int16_t y, uint16_t width, uint16_t height);
 
-  List<Window> *getWindowsAbove (Window *window);
-
-  void update (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons);
-  void paint ();
-
-private:
-  List<Window> *windows;
-  Window *dragged_window;
-
-  uint16_t drag_off_x;
-  uint16_t drag_off_y;
-
-  Context *context;
-
-  uint8_t last_buttons_state;
-  uint16_t mouse_x;
-  uint16_t mouse_y;
+  void OnUpdate ();
+  void update_mouse (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_buttons);
+  void OnDraw ();
 };
 
 #endif

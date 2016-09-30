@@ -14,7 +14,13 @@ public:
   inline int32_t getBottom  () const { return this->bottom; };
   inline int32_t getRight   () const { return this->right; };
 
+  inline void SetTop (int32_t val) { this->top = val; }
+  inline void SetLeft (int32_t val) { this->left = val; }
+  inline void SetBottom (int32_t val) { this->bottom = val; }
+  inline void SetRight (int32_t val) { this->right = val; }
+
   List<Rect> *split (Rect *other);
+  Rect *intersect (Rect *other);
 
 private:
   int32_t top;

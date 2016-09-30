@@ -3,7 +3,8 @@
 #include <arch/i386/serial.h>
 
 Context::Context (uint32_t *buffer, uint16_t width, uint16_t height) :
-  buffer (buffer), width (width), height (height) {
+  buffer (buffer), width (width), height (height),
+  translate_x (0), translate_y (0) {
   this->clip_rects = new List<Rect> ();
 }
 
@@ -11,6 +12,11 @@ void Context::clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, 
   int cur_x;
   int max_x = x + width;
   int max_y = y + height;
+
+  x += this->translate_x;
+  y += this->translate_y;
+  max_x += this->translate_x;
+  max_y += this->translate_y;
 
   if (x < clip_area->getLeft ())
     x = clip_area->getLeft ();
@@ -30,23 +36,12 @@ void Context::clip_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, 
 }
 
 void Context::fill_rect (int16_t x, int16_t y, uint16_t width, uint16_t height, uint32_t color) {
-  size_t start_x, cur_x, cur_y, end_x, end_y;
-  size_t max_x = x + width;
-  size_t max_y = y + height;
-  size_t i;
-
-  (void) start_x;
-  (void) cur_x;
-  (void) cur_y;
-  (void) end_x;
-  (void) end_y;
-  (void) max_x;
-  (void) max_y;
+  int i;
 
   Rect *clip_area;
 
-  if (this->clip_rects->getSize ()) {
-    for (i = 0; i < this->clip_rects->getSize (); i++) {
+  if (this->clip_rects->Count ()) {
+    for (i = 0; i < this->clip_rects->Count (); i++) {
       clip_area = this->clip_rects->get (i);
       this->clip_rect (x, y, width, height, clip_area, color);
     }
@@ -84,15 +79,15 @@ void Context::vline (int16_t x, int16_t y, uint16_t height, uint32_t color) {
 void Context::add_clip_rect (Rect *rect) {
   this->subtract_clip_rect (rect);
 
-  this->clip_rects->insert (rect);
+  this->clip_rects->add (rect);
 }
 
 void Context::subtract_clip_rect (Rect *rect) {
-  size_t i;
+  int i;
   Rect *current;
   List<Rect> *split_rects;
 
-  for (i = 0; i < this->clip_rects->getSize (); ) {
+  for (i = 0; i < this->clip_rects->Count (); ) {
     current = this->clip_rects->get (i);
 
     if (!(current->getLeft   () <= rect->getRight  () &&
@@ -107,8 +102,8 @@ void Context::subtract_clip_rect (Rect *rect) {
     split_rects = current->split (rect);
     delete current;
 
-    while (split_rects->getSize ()) {
-      this->clip_rects->insert (split_rects->remove (0));
+    while (split_rects->Count ()) {
+      this->clip_rects->add (split_rects->remove (0));
     }
 
     delete split_rects;
@@ -117,10 +112,31 @@ void Context::subtract_clip_rect (Rect *rect) {
   }
 }
 
+void Context::intersect_clip_rect (Rect *rect) {
+  int i;
+  List<Rect> *output = new List<Rect> ();
+  Rect *current;
+  Rect *intersect;
+
+  for (i = 0; i < this->clip_rects->Count (); i++) {
+    current = this->clip_rects->get (i);
+    intersect = current->intersect (rect);
+
+    if (intersect)
+      output->add (intersect);
+  }
+
+  delete clip_rects;
+
+  this->clip_rects = output;
+
+  delete rect;
+}
+
 void Context::clear_clip_rects () {
   Rect *current;
 
-  while (this->clip_rects->getSize ()) {
+  while (this->clip_rects->Count ()) {
     current = this->clip_rects->remove (0);
     delete current;
   }

@@ -24,20 +24,21 @@ public:
     size = 0;
   };
 
-  bool insert (T *data);
-  T *remove (size_t index);
-  T *get (size_t index);
+  bool add (T *data);
+  T *remove (int index);
+  T *get (int index);
+  void clear ();
 
-  inline size_t getSize () const { return this->size; };
+  inline int Count () const { return this->size; };
 
 private:
-  size_t size;
+  int size;
 
   ListNode<T> *root;
 };
 
 template <typename T>
-bool List<T>::insert (T *data) {
+bool List<T>::add (T *data) {
   ListNode<T> *new_node = new ListNode<T> (data);
 
   if (!this->root)
@@ -58,7 +59,7 @@ bool List<T>::insert (T *data) {
 }
 
 template <typename T>
-T *List<T>::remove (size_t index) {
+T *List<T>::remove (int index) {
   T* payload;
 
   if (this->size == 0 || index >= this->size)
@@ -66,7 +67,7 @@ T *List<T>::remove (size_t index) {
 
   ListNode<T> *current = this->root;
 
-  for (size_t curr_index = 0; (curr_index < index) && current; curr_index++)
+  for (int curr_index = 0; (curr_index < index) && current; curr_index++)
     current = current->next;
 
   if (!current)
@@ -91,16 +92,22 @@ T *List<T>::remove (size_t index) {
 }
 
 template <typename T>
-T *List<T>::get (size_t index) {
+T *List<T>::get (int index) {
   if (this->size == 0 || index >= this->size)
     return nullptr;
 
   ListNode<T> *current = this->root;
 
-  for (size_t curr_index = 0; (curr_index < index) && current; curr_index++)
+  for (int curr_index = 0; (curr_index < index) && current; curr_index++)
     current = current->next;
 
   return current ? current->data : nullptr;
+}
+
+template <typename T>
+void List<T>::clear () {
+  while (this->size)
+    this->remove (0);
 }
 
 #endif
