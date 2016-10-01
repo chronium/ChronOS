@@ -25,5 +25,5 @@ void Desktop::update_mouse (int16_t mouse_x, int16_t mouse_y, uint8_t mouse_butt
 
   this->GetContext ()->fill_rect (mouse_x, mouse_y, 1, 1, 0);
 
-  this->GetContext ()->swap_buff ();
+  this->GetContext ()->SwapBuffers ();
 }

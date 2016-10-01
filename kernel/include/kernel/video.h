@@ -34,37 +34,4 @@ private:
 };
 }
 
-typedef enum video_mode {
-  TEXT_SCREEN,
-  PIXEL_SCREEN,
-} video_mode_t;
-
-struct video {
-  size_t         width;
-  size_t         height;
-
-  size_t         bpe;
-  size_t         pitch;
-
-  size_t         size;
-  video_mode_t   mode;
-
-  uint32_t      *buffer;
-  struct device *dev;
-};
-
-extern struct video *video_inst;
-
-typedef struct vga_320x200x256_s {
-  uint8_t  *address;
-  uint32_t  *buffer;
-
-  size_t size;
-} vga_320x200x256_t;
-
-void init_video    (bool);
-void swap_buffers (struct video *video, size_t x, size_t y, size_t width, size_t height);
-
-void screen_loop ();
-
 #endif

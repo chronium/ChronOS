@@ -2,8 +2,8 @@
 #include <kernel/video.h>
 #include <arch/i386/serial.h>
 
-Context::Context (uint32_t *buffer, uint16_t width, uint16_t height) :
-  buffer (buffer), width (width), height (height),
+Context::Context (uint16_t width, uint16_t height) :
+  buffer (new uint32_t[width * height]), width (width), height (height),
   translate_x (0), translate_y (0) {
   this->clip_rects = new List<Rect> ();
 }

@@ -3,14 +3,27 @@
 
 #include <kernel/context.h>
 #include <kernel/video.h>
+#include <kernel/device.h>
 
-class VGAContext : public Context {
+#include <arch/i386/portio.h>
+
+#define VGA_MEMORY 0xA0000
+
+class VGAContext : public Context, public Driver::Device {
 public:
-  VGAContext (struct video *vga);
+  VGAContext (int id, const char *name);
 
-  inline void swap_buff () { swap_buffers (vga, 0, 0, 320, 200); };
+  inline void SwapBuffers ();
 private:
-  struct video *vga;
+  void setPalette ();
+  void writeVGARegs (uint8_t *regs);
+
+  inline uint8_t *getVGAAddress () const { return (uint8_t *) VGA_MEMORY; };
+
+  inline void setPaletteIndex (uint8_t index) { outb (0x03c8, index); };
+
+  inline void setPaletteColor (uint8_t red, uint8_t green, uint8_t blue);
+  inline void setColorAtIndex (uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
 };
 
 #endif

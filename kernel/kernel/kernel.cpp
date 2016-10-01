@@ -15,7 +15,7 @@
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
 
-#define _GRAPHICS 0
+#define _GRAPHICS 1
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -31,11 +31,6 @@ extern "C"
 void kearly (multiboot_info_t *_mboot_info) {
 	mboot_info = _mboot_info;
 	init_kheap (*(uint32_t *)(mboot_info->mods_addr + 4));
-#if _GRAPHICS == 1
-	init_video (true);
-#else
-	init_video (false);
-#endif
 }
 
 extern "C"
@@ -46,7 +41,7 @@ void kmain (void) {
 	puts ("IDT initialized");
 	init_paging ();
 	puts ("Paging initialized");
-	//Driver::Serial COM1 (0, "COM1", COM1_PORT);
+
 	const char *serial_test = "Hello Serial World!\n\r";
 	Driver::COM1.Write (serial_test, strlen (serial_test), 0);
 	puts ("Serial initialized");
@@ -75,7 +70,7 @@ void kmain (void) {
 	printf ("greet.txt: %s\n", greet);
 
 #if _GRAPHICS == 1
-	Desktop *desktop = new Desktop (new VGAContext (video_inst));
+	Desktop *desktop = new Desktop (new VGAContext (3, "vga"));
 	desktop->CreateWindow (10, 10, 80, 50);
 	desktop->CreateWindow (100, 50, 50, 60);
 	desktop->CreateWindow (200, 100, 50, 50);

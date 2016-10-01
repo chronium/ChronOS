@@ -27,7 +27,7 @@ private:
   uint16_t port;
 };
 
-static Serial COM1 (0, "COM1", COM1_PORT);
+static Serial COM1 (1, "COM1", COM1_PORT);
 
 }
 

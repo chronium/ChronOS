@@ -99,7 +99,5 @@ size_t Terminal::Write (const void *buffer, size_t len, uint32_t address) {
 
 	return len;
 }
-
-Terminal *terminal = new Terminal (0, "tty0");
-
+	Terminal *terminal = new Terminal(0, "tty0");
 }
