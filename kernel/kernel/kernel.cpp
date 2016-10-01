@@ -15,7 +15,7 @@
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
 
-#define _GRAPHICS 1
+#define _GRAPHICS 0
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -37,20 +37,6 @@ void kearly (multiboot_info_t *_mboot_info) {
 	init_video (false);
 #endif
 }
-
-Driver::Terminal *terminal = new Driver::Terminal (0, "tty0");
-
-struct tar_header
-{
-    char filename[100];
-    char mode[8];
-    char uid[8];
-    char gid[8];
-    char size[12];
-    char mtime[12];
-    char chksum[8];
-    char typeflag[1];
-};
 
 extern "C"
 void kmain (void) {
