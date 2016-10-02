@@ -25,7 +25,6 @@ LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 
 OBJS:=\
 $(KERNEL_ARCH_OBJS) \
-kernel/kernel.o \
 kernel/panic.o \
 kernel/icxxabi.o \
 kernel/memory/heap.o \
@@ -39,6 +38,11 @@ kernel/graphics/desktop.o \
 kernel/graphics/rect.o \
 kernel/graphics/vga_context.o \
 kernel/fs/tar.o \
+kernel/fs/vfs.o \
+kernel/fs/mountpoint.o \
+kernel/fs/initrd.o \
+kernel/fs/filesystem.o \
+kernel/kernel.o
 
 CRTI_OBJ:=$(ARCHDIR)/asm/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)

@@ -24,6 +24,7 @@ void *memset (void *, int, size_t);
 
 char *strdup (const char *);
 size_t strlen (const char *);
+int strcmp (const char *, const char *);
 
 #ifdef __cplusplus
 }

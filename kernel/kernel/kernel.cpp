@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <kernel/libc.h>
 #include <kernel/icxxabi.h>
+
+#include <sys/stat.h>
 
 #include <kernel/tty.h>
 #include <kernel/heap.h>
@@ -14,8 +17,10 @@
 #include <kernel/desktop.h>
 #include <kernel/ramdisk.h>
 #include <kernel/fs/tar.h>
+#include <kernel/fs/vfs.h>
+#include <kernel/fs/initrd.h>
 
-#define _GRAPHICS 1
+#define _GRAPHICS 0
 
 #include <arch/i386/idt.h>
 #include <arch/i386/gdt.h>
@@ -25,6 +30,8 @@
 #include <arch/i386/keyboard.h>
 
 #include <arch/i386/multiboot.h>
+
+#include <arch/i386/keyboard.h>
 
 multiboot_info_t *mboot_info;
 extern "C"
@@ -54,20 +61,23 @@ void kmain (void) {
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
 
-	auto *ramdisk = new Driver::Ramdisk (1, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
-
+	auto *ramdisk = new Driver::Ramdisk (4, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
 	auto *tar = FileSystem::Tar::Parse (ramdisk);
 
-	for (int i = 0; i < tar->GetHeaders ()->Count (); i++)
-		if (FileSystem::Tar::GetType (tar->GetHeaders ()->get (i)) == FileSystem::Tar::FileType::DirType)
-			printf ("File %d: %s\n", i, tar->GetHeaders ()->get (i)->header->filename);
+	auto *initrd = new FileSystem::Initrd (strdup ("/"), tar);
 
-	FileSystem::tar_file_t *greet_file = tar->GetHeaders ()->get (2);
-	size_t greet_file_size = FileSystem::Tar::GetSize (greet_file);
-	char *greet = new char[greet_file_size + 1];
-	greet[greet_file_size] = '\0';
-	memcpy (greet, greet_file->content, greet_file_size);
-	printf ("greet.txt: %s\n", greet);
+	VFS::InitVFS (initrd);
+
+	int file = VFS::Open ("/");
+
+	if (file == -1) {
+		puts ("Could not open /");
+	}
+
+	struct stat st;
+	stat ("/", &st);
+
+	printf ("%d\n", S_ISDIR(st.st_mode));
 
 #if _GRAPHICS == 1
 	Desktop *desktop = new Desktop (new VGAContext (3, "vga"));

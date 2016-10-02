@@ -96,13 +96,13 @@ static char const *chsL = 	"  1234567890-= \t"
 							"  789-456+1230."
 							;
 
-static char const *chsU = 	"  !@#$%^&*()_+ \t" 	
-							"QWERTYUIOP{}\n "		
-							"ASDFGHJKL:\"~ "		
-							"|ZXCVBNM<>?"			
-							" *   "					
-							"          " // F1-10	
-							"     -   +    ."		
+static char const *chsU = 	"  !@#$%^&*()_+ \t"
+							"QWERTYUIOP{}\n "
+							"ASDFGHJKL:\"~ "
+							"|ZXCVBNM<>?"
+							" *   "
+							"          " // F1-10
+							"     -   +    ."
 							;
 
 static bool keyboard_get_key (int key, struct KeyInfo *keyInfo) {
@@ -165,7 +165,7 @@ static void handle_scancode(int key, bool released) {
 						enqueue_key (keyInfo);
 					}
 				}
-				keyboard_update_leds ();	
+				keyboard_update_leds ();
 			}
 			break;
 	}
@@ -228,20 +228,15 @@ static void keyboard_handler (regs_t *ctx) {
 }
 
 void init_keyboard () {
-  	keyboard_set_leds (LED_NUM_LOCK);
+	keyboard_set_leds (LED_NUM_LOCK);
 
 	request_irq (1, keyboard_handler);
 }
 
 int getc () {
-#if defined (__is_chronos_kernel)
 	struct KeyInfo k = keyboard_read_key ();
 	int ch = k.Char;
 	if (ch != 0)
 		putchar (ch);
 	return ch;
-#else
-	// TODO: Implement syscall.
-#endif
-	return 0;
 }

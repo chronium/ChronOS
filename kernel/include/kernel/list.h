@@ -24,7 +24,7 @@ public:
     size = 0;
   };
 
-  bool add (T *data);
+  int add (T *data);
   T *remove (int index);
   T *get (int index);
   void clear ();
@@ -38,7 +38,7 @@ private:
 };
 
 template <typename T>
-bool List<T>::add (T *data) {
+int List<T>::add (T *data) {
   ListNode<T> *new_node = new ListNode<T> (data);
 
   if (!this->root)
@@ -53,9 +53,7 @@ bool List<T>::add (T *data) {
     new_node->prev = current;
   }
 
-  this->size++;
-
-  return 1;
+  return this->size++;
 }
 
 template <typename T>
