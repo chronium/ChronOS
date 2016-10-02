@@ -79,12 +79,6 @@ void kmain (void) {
 		desktop->update_mouse (mouse_x, mouse_y, mouse_left);
 	}
 
-#else
-
-	while (true) {
-		getc ();
-	}
-
 #endif
 
 	__cxa_finalize (0);
