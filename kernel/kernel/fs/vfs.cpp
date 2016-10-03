@@ -28,8 +28,8 @@ int Stat (const char *path, struct stat *buf) {
   return vfs_root->Stat (path, buf);
 }
 
-int Open (const char *path) {
-  File *file = vfs_root->Open (path);
+int Open (const char *path, int flags) {
+  File *file = vfs_root->Open (path, flags);
   if (file != nullptr)
     return files->add (file);
   return -1;
@@ -39,4 +39,8 @@ int Open (const char *path) {
 
 int kstat (const char *path, struct stat *buf) {
   return VFS::Stat (path, buf);
+}
+
+int kopen (const char *path, int flags) {
+  return VFS::Open (path, flags);
 }

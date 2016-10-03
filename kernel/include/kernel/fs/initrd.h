@@ -3,6 +3,7 @@
 
 #include <kernel/fs/tar.h>
 #include <kernel/fs/filesystem.h>
+#include <kernel/fs/file.h>
 
 namespace FileSystem {
 
@@ -12,6 +13,7 @@ public:
     FileSystem (path), tarfs (tar) { }
 
   void Mount ();
+  File *Open (const char *path, int flags);
 
 private:
   Tar *tarfs;

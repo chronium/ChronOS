@@ -228,15 +228,20 @@ static void keyboard_handler (regs_t *ctx) {
 }
 
 void init_keyboard () {
-	keyboard_set_leds (LED_NUM_LOCK);
+  	keyboard_set_leds (LED_NUM_LOCK);
 
 	request_irq (1, keyboard_handler);
 }
 
 int getc () {
+#if defined (__is_chronos_kernel)
 	struct KeyInfo k = keyboard_read_key ();
 	int ch = k.Char;
 	if (ch != 0)
 		putchar (ch);
 	return ch;
+#else
+	// TODO: Implement syscall.
+#endif
+	return 0;
 }

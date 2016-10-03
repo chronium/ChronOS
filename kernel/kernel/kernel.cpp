@@ -7,6 +7,8 @@
 
 #include <sys/stat.h>
 
+#include <fcntl.h>
+
 #include <kernel/tty.h>
 #include <kernel/heap.h>
 #include <kernel/video.h>
@@ -68,16 +70,29 @@ void kmain (void) {
 
 	VFS::InitVFS (initrd);
 
-	int file = VFS::Open ("/");
+	int file = open ("/greet.txt", O_RDONLY);
 
-	if (file == -1) {
-		puts ("Could not open /");
-	}
+	if (file == -1)
+		puts ("Could not open /greet.txt");
+	else
+		printf ("/greet.txt open in fd: %d\n", file);
 
 	struct stat st;
-	stat ("/", &st);
 
-	printf ("%d\n", S_ISDIR(st.st_mode));
+	if (stat ("/", &st) != -1) {
+		if (S_ISDIR(st.st_mode))
+			printf ("/ is a directory\n");
+		else
+			printf ("/ is not a directory???\n");
+	}
+
+	if (stat ("/greet.txt", &st) != -1) {
+		if (S_ISREG(st.st_mode))
+			printf ("/greet.txt is a file\n");
+		else
+			printf ("/greet.txt is not a file???\n");
+	}
+
 
 #if _GRAPHICS == 1
 	Desktop *desktop = new Desktop (new VGAContext (3, "vga"));

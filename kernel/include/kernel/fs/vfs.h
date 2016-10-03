@@ -11,7 +11,7 @@ namespace VFS {
 
 extern void InitVFS (MountPoint *root);
 extern void Mount (MountPoint *mnt);
-extern int Open (const char *path);
+extern int Open (const char *path, int flags);
 extern int Stat (const char *path, struct stat *buf);
 
 extern MountPoint *vfs_root;

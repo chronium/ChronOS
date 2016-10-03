@@ -1,16 +1,17 @@
 #ifndef _KERNEL_FS_FILE_H
 #define _KERNEL_FS_FILE_H
 
+#include <stdio.h>
 #include <sys/stat.h>
 
 namespace FileSystem {
 
 class File {
 public:
-  File (char *name, mode_t mode):
-    name (name), open (true), mode (mode) { }
+  File (const char *name, mode_t mode, int flags):
+    name (name), open (true), mode (mode), flags (flags) { }
 
-  inline char *GetName () const { return this->name; };
+  inline const char *GetName () const { return this->name; };
 
   inline void Close () { this->open = false;};
   inline int Stat (struct stat *buf) {
@@ -20,10 +21,12 @@ public:
   };
 
 private:
-  char *name;
+  const char *name;
 
   bool open;
   mode_t mode;
+
+  int flags;
 };
 
 }

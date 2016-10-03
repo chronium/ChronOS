@@ -8,6 +8,8 @@ namespace FileSystem {
 class FileSystem : public MountPoint {
 public:
   FileSystem (char *path);
+
+  virtual File *Open (const char *path, int flags) = 0;
 };
 
 }

@@ -32,6 +32,7 @@ stdio/putchar.o \
 stdio/puts.o \
 stdio/sprintf.o \
 stdio/vsprintf.o \
+stdio/open.o \
 stdlib/abort.o \
 stdlib/malloc.o \
 stdlib/calloc.o \
@@ -43,6 +44,12 @@ string/memset.o \
 string/strlen.o \
 string/strdup.o \
 string/strcmp.o \
+string/strchrnul.o \
+string/strchr.o \
+string/strncpy.o \
+string/stpcpy.o \
+string/strcpy.o \
+string/strncmp.o \
 sys/stat/stat.o
 
 HOSTEDOBJS:=\
