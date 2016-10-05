@@ -8,10 +8,12 @@
 #include <kernel/video.h>
 #include <kernel/tty.h>
 
+#include <kernel/devmanager.h>
+
 namespace Driver {
 
-Terminal::Terminal (int id, const char *name) :
-	Video (id, name, DeviceType::CharDevice, 80, 25, 16),
+Terminal::Terminal (const char *name):
+	Video (name, DeviceType::CharDevice, 80, 25, 16),
 	fgColor (0x07),
 	bgColor (0x00),
 	x (0),
@@ -99,5 +101,7 @@ size_t Terminal::Write (const void *buffer, size_t len, uint32_t address) {
 
 	return len;
 }
-	Terminal *terminal = new Terminal(0, "tty0");
+
+Terminal *terminal = new Terminal("tty0");
+
 }

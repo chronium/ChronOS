@@ -2,8 +2,8 @@
 
 namespace Driver {
 
-Video::Video (int id, const char *name, DeviceType type, size_t width, size_t height, size_t bpe) :
-  Device (id, name, type),
+Video::Video (const char *name, DeviceType type, size_t width, size_t height, size_t bpe) :
+  Device (name, type),
   width (width),
   height (height),
   bpe (bpe / 8) { }

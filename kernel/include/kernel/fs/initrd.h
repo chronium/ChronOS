@@ -6,39 +6,21 @@
 #include <kernel/fs/tar.h>
 #include <kernel/fs/filesystem.h>
 #include <kernel/fs/file.h>
+#include <kernel/fs/node.h>
 #include <kernel/list.h>
 
 namespace FileSystem {
 
-class InitrdNode {
-public:
-  InitrdNode (const char *name, mode_t mode):
-    name (name), mode (mode) { }
-public:
-  const char *name;
-  mode_t mode;
-};
-
-class InitrdDirectory : public InitrdNode {
-public:
-  InitrdDirectory (const char *name, mode_t mode):
-    InitrdNode (name, mode), children (new List<InitrdNode> ()) { }
-
-private:
-  List<InitrdNode> *children;
-};
-
 class Initrd : public FileSystem {
 public:
-  Initrd (const char *path):
-    FileSystem (path), nodes (new List<InitrdNode> ()) { }
+  Initrd (const char *path);
 
   void Mount ();
-  File *Open (const char *path, int flags);
+  Node *Open (const char *path, int flags);
   struct dirent *ReadDir (DIR *dir);
   int MkDir (const char *path, mode_t mode);
 private:
-  List<InitrdNode> *nodes;
+  List<Node> *nodes;
 };
 
 }

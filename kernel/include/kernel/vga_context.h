@@ -11,7 +11,7 @@
 
 class VGAContext : public Context, public Driver::Device {
 public:
-  VGAContext (int id, const char *name);
+  VGAContext (const char *name);
 
   inline void SwapBuffers ();
 private:

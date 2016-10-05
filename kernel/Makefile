@@ -31,6 +31,7 @@ kernel/memory/heap.o \
 kernel/memory/ramdisk.o \
 kernel/hardware/device.o \
 kernel/hardware/tty.o \
+kernel/hardware/devmanager.o \
 kernel/graphics/video.o \
 kernel/graphics/window.o \
 kernel/graphics/context.o \

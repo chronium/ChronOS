@@ -8,8 +8,8 @@
 
 namespace Driver {
 
-Serial::Serial (int id, const char *name, uint16_t port) :
-  Device (id, name, DeviceType::CharDevice),
+Serial::Serial (const char *name, uint16_t port) :
+  Device (name, DeviceType::CharDevice),
   port (port) {
   this->EnablePort ();
 }

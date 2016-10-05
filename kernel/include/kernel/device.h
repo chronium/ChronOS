@@ -14,7 +14,7 @@ public:
     CharDevice = 2,
   };
 
-  Device (int id, const char *name, DeviceType type);
+  Device (const char *name, DeviceType type);
   virtual ~Device ();
 
   virtual size_t Read (void *buffer, size_t len, uint32_t address) {
@@ -32,11 +32,9 @@ public:
     return 0;
   }
 
-  inline int GetID () const { return this->id; }
   inline const char *GetName () const { return this->name; }
   inline DeviceType GetType () const { return this->type; }
 private:
-  int id;
   const char *name;
   DeviceType type;
 };

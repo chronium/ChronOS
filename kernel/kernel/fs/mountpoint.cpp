@@ -5,10 +5,15 @@
 #include <sys/stat.h>
 
 #include <kernel/fs/mountpoint.h>
+#include <kernel/fs/node.h>
 #include <kernel/fs/file.h>
 #include <kernel/fs/filesystem.h>
 
 namespace FileSystem {
+
+MountPoint::MountPoint (const char *path):
+  Node (path, 0, (FileSystem *) this), children (new List<FileSystem> ()), files (new List<struct _file> ()) { }
+
 void MountPoint::Mount (MountPoint *mnt) {
   this->children->add ((FileSystem *) mnt);
   mnt->Mount ();
@@ -17,10 +22,10 @@ void MountPoint::Mount (MountPoint *mnt) {
 File *MountPoint::Open (const char *path, int flags) {
   File *file = nullptr;
   if (strcmp (path, "/") == 0)
-    file = new File ((FileSystem *) this, strdup (path), __S_IFDIR, flags);
+    file = new File (strdup (path), __S_IFDIR, flags, (FileSystem *) this);
   else {
     char *rel = nullptr;
-    file = this->FindFileSystem (path, &rel)->Open (rel, flags);
+    file = (File *) this->FindFileSystem (path, &rel)->Open (rel, flags);
   }
 
   if (file != nullptr) {
@@ -34,7 +39,7 @@ File *MountPoint::Open (const char *path, int flags) {
 }
 
 FileSystem *MountPoint::FindFileSystem (const char *path, char **rel) {
-  if (!strncmp (this->path, path, strlen (this->path))) {
+  if (!strncmp (this->GetName (), path, strlen (this->GetName ()))) {
     *rel = strdup(MountPoint::RemoveLeadingSlash(path));
     return (FileSystem *) this;
   }
@@ -43,7 +48,7 @@ FileSystem *MountPoint::FindFileSystem (const char *path, char **rel) {
 }
 
 MountPoint *MountPoint::FindMountPoint (const char *path) {
-  if (!strncmp (this->path, path, strlen (this->path)))
+  if (!strncmp (this->GetName (), path, strlen (this->GetName ())))
     return this;
   return nullptr;
 }

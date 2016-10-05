@@ -25,6 +25,8 @@
 #include <kernel/fs/vfs.h>
 #include <kernel/fs/initrd.h>
 
+#include <kernel/devmanager.h>
+
 #define _GRAPHICS 0
 
 #include <arch/i386/idt.h>
@@ -65,6 +67,8 @@ void kmain (void) {
 	asm volatile ("sti");
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
+
+	DeviceManager::devman->ListDevices ();
 
 	/*auto *ramdisk = new Driver::Ramdisk (4, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
 	auto *tar = FileSystem::Tar::Parse (ramdisk);*/

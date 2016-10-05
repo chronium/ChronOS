@@ -13,7 +13,7 @@ namespace Driver {
 
 class Video : public Device {
 public:
-  Video (int id, const char *name, DeviceType type, size_t width, size_t height, size_t bpe);
+  Video (const char *name, DeviceType type, size_t width, size_t height, size_t bpe);
   virtual ~Video () { }
 
   virtual size_t Read (void *buffer, size_t len, uint32_t address);

@@ -10,6 +10,8 @@ using namespace FileSystem;
 
 namespace VFS {
 
+class Node;
+
 extern void InitVFS (MountPoint *root);
 extern void Mount (MountPoint *mnt);
 extern int Open (const char *path, int flags);

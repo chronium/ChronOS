@@ -68,9 +68,9 @@ uint8_t vga_320x200x256[] =
   0x41, 0x00, 0x0F, 0x00,	0x00
 };
 
-VGAContext::VGAContext (int id, const char *name) :
+VGAContext::VGAContext (const char *name) :
   Context (320, 200),
-  Driver::Device (id, name, DeviceType::BlockDevice) {
+  Driver::Device (name, DeviceType::BlockDevice) {
   this->writeVGARegs (vga_320x200x256);
   this->setPalette ();
   this->Clear ();

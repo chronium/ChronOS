@@ -5,8 +5,8 @@
 
 namespace Driver {
 
-Ramdisk::Ramdisk (int id, const char *name, void *memory) :
-  Device (id, name, DeviceType::BlockDevice),
+Ramdisk::Ramdisk (const char *name, void *memory) :
+  Device (name, DeviceType::BlockDevice),
   memory_ptr ((char *) memory) { }
 
 Ramdisk::~Ramdisk () { }

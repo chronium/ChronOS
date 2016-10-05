@@ -2,6 +2,7 @@
 
 #include <kernel/fs/vfs.h>
 #include <kernel/fs/mountpoint.h>
+#include <kernel/fs/file.h>
 
 #include <sys/stat.h>
 

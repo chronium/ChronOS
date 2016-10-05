@@ -9,7 +9,7 @@ namespace Driver {
 
 class Terminal : public Video {
 public:
-  Terminal (int id, const char *name);
+  Terminal (const char *name);
   ~Terminal ();
 
   size_t Read (void *buffer, size_t len, uint32_t address);

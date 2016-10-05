@@ -14,7 +14,7 @@ namespace Driver {
 
 class Serial : public Device {
 public:
-  Serial (int id, const char *name, uint16_t port);
+  Serial (const char *name, uint16_t port);
   ~Serial ();
 
   size_t Read (void *buffer, size_t len, uint32_t address);
@@ -27,7 +27,10 @@ private:
   uint16_t port;
 };
 
-static Serial COM1 (1, "COM1", COM1_PORT);
+static Serial COM1 ("COM1", COM1_PORT);
+static Serial COM2 ("COM2", COM2_PORT);
+static Serial COM3 ("COM3", COM3_PORT);
+static Serial COM4 ("COM4", COM4_PORT);
 
 }
 

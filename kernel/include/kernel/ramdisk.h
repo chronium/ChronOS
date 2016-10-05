@@ -7,7 +7,7 @@ namespace Driver {
 
 class Ramdisk : public Device {
 public:
-  Ramdisk (int id, const char *name, void *memory);
+  Ramdisk (const char *name, void *memory);
   ~Ramdisk ();
 
   size_t Read (void *buffer, size_t len, uint32_t address);
