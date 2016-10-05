@@ -30,7 +30,7 @@ void Terminal::PutEntry (char c) {
 }
 
 void Terminal::Scroll () {
-	memcpy (this->GetAddress (), (void *) (this->GetAddress () + this->GetWidth ()), this->GetWidth () * (this->GetHeight () - 1));
+	memcpy (this->GetAddress (), (void *) (this->GetAddress () + this->GetWidth () * 2), this->GetWidth () * (this->GetHeight () - 1) * 2);
 }
 
 void Terminal::Newline () {
@@ -64,8 +64,8 @@ void Terminal::PutC (char c) {
 				this->Newline ();
 			this->PutEntry (c);
 			this->x++;
-			this->SetCursor ();
 	}
+	this->SetCursor ();
 }
 
 void Terminal::Write (const char *data, size_t size) {

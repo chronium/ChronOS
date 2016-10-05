@@ -13,7 +13,18 @@ void Initrd::Mount () {
 }
 
 File *Initrd::Open (const char *path, int flags) {
-  for (int i = 0; i < 5; i++) {
+  (void) path;
+  (void) flags;
+
+  for (int i = 0; i < this->nodes->Count (); i++) {
+    auto *node = this->nodes->get (i);
+
+    if (!strncmp (node->name, path, strlen (node->name))) {
+      return new File (this, path, node->mode, flags);
+    }
+  }
+
+  /*for (int i = 0; i < this->tarfs->GetHeaders ()->Count (); i++) {
     tar_file_t *file = this->tarfs->GetHeaders ()->get (i);
 
     if (!(strncmp(file->header->filename, path, strlen (path)))) {
@@ -47,10 +58,21 @@ File *Initrd::Open (const char *path, int flags) {
           break;
       }
 
-      return new File (path, mode, flags);
+      return new File (this, path, mode, flags);
     }
-  }
+  }*/
   return nullptr;
+}
+
+struct dirent *Initrd::ReadDir (DIR *dir) {
+  (void) dir;
+  return nullptr;
+}
+
+int Initrd::MkDir (const char *path, mode_t mode) {
+  this->nodes->add (new InitrdDirectory (RemodeLeastSlash(path), __S_IFDIR | mode));
+
+  return -1;
 }
 
 }

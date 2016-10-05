@@ -32,7 +32,6 @@ stdio/putchar.o \
 stdio/puts.o \
 stdio/sprintf.o \
 stdio/vsprintf.o \
-stdio/open.o \
 stdlib/abort.o \
 stdlib/malloc.o \
 stdlib/calloc.o \
@@ -50,7 +49,12 @@ string/strncpy.o \
 string/stpcpy.o \
 string/strcpy.o \
 string/strncmp.o \
-sys/stat/stat.o
+fcntl/open.o \
+dirent/opendir.o \
+dirent/fdopendir.o \
+dirent/readdir.o \
+sys/stat/stat.o \
+sys/stat/mkdir.o
 
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \

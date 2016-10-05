@@ -35,6 +35,14 @@ int Open (const char *path, int flags) {
   return -1;
 }
 
+int MkDir (const char *path, mode_t mode) {
+  return vfs_root->MkDir (path, mode);
+}
+
+struct dirent *ReadDir (DIR *dir) {
+  return vfs_root->ReadDir (dir);
+}
+
 }
 
 int kstat (const char *path, struct stat *buf) {
@@ -43,4 +51,16 @@ int kstat (const char *path, struct stat *buf) {
 
 int kopen (const char *path, int flags) {
   return VFS::Open (path, flags);
+}
+
+int kmkdir (const char *path, mode_t mode) {
+  return VFS::MkDir (path, mode);
+}
+
+DIR *kfdopendir (int fd) {
+  return new DIR { .fd = fd, .filepos = 0 };
+} 
+
+struct dirent *kreaddir (DIR *dir) {
+  return VFS::ReadDir (dir);
 }

@@ -6,10 +6,12 @@
 
 namespace FileSystem {
 
+class FileSystem;
+
 class File {
 public:
-  File (const char *name, mode_t mode, int flags):
-    name (name), open (true), mode (mode), flags (flags) { }
+  File (FileSystem *fs, const char *name, mode_t mode, int flags):
+    fs(fs), name (name), open (true), mode (mode), flags (flags) { }
 
   inline const char *GetName () const { return this->name; };
 
@@ -20,7 +22,11 @@ public:
     return 0;
   };
 
+  inline FileSystem *GetFileSystem () const { return this->fs; };
+
 private:
+  FileSystem *fs;
+
   const char *name;
 
   bool open;

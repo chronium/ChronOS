@@ -3,7 +3,7 @@
 
 namespace FileSystem {
 
-FileSystem::FileSystem (char *path):
+FileSystem::FileSystem (const char *path):
   MountPoint (path) { }
 
 }

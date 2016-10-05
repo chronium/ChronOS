@@ -33,6 +33,8 @@ struct stat {
 
 int stat (const char *__restrict path, struct stat *__restrict buf);
 
+int mkdir (const char *path, mode_t mode);
+
 #ifdef __cplusplus
 }
 #endif

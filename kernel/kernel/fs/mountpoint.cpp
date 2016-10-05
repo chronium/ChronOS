@@ -17,7 +17,7 @@ void MountPoint::Mount (MountPoint *mnt) {
 File *MountPoint::Open (const char *path, int flags) {
   File *file = nullptr;
   if (strcmp (path, "/") == 0)
-    file = new File (strdup (path), __S_IFDIR, flags);
+    file = new File ((FileSystem *) this, strdup (path), __S_IFDIR, flags);
   else {
     char *rel = nullptr;
     file = this->FindFileSystem (path, &rel)->Open (rel, flags);
@@ -43,7 +43,7 @@ FileSystem *MountPoint::FindFileSystem (const char *path, char **rel) {
 }
 
 MountPoint *MountPoint::FindMountPoint (const char *path) {
-  if (strncmp (this->path, path, strlen (this->path)))
+  if (!strncmp (this->path, path, strlen (this->path)))
     return this;
   return nullptr;
 }
@@ -62,6 +62,18 @@ int MountPoint::Stat (const char *path, struct stat *buf) {
 //TODO: ^ Close file when that's implemented
 
   return -1;
+}
+
+int MountPoint::MkDir (const char *path, mode_t mode) {
+  char *rel = nullptr;
+  return this->FindFileSystem (path, &rel)->MkDir (rel, mode);
+}
+
+struct dirent *MountPoint::ReadDir (DIR *dir) {
+  File *file = this->files->get (_DIR_dirfd (dir))->file;
+  dir->filepos++;
+
+  return file->GetFileSystem ()->ReadDir (dir);
 }
 
 }

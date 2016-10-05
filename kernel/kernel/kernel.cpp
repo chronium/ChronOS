@@ -8,6 +8,9 @@
 #include <sys/stat.h>
 
 #include <fcntl.h>
+#include <dirent.h>
+
+#include <kernel/assert.h>
 
 #include <kernel/tty.h>
 #include <kernel/heap.h>
@@ -63,14 +66,25 @@ void kmain (void) {
 
 	puts ("\nWelcome to ChronOS, well, the kernel to be more specific.");
 
-	auto *ramdisk = new Driver::Ramdisk (4, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
-	auto *tar = FileSystem::Tar::Parse (ramdisk);
+	/*auto *ramdisk = new Driver::Ramdisk (4, "initrd", (void *) *(uint32_t *)(mboot_info->mods_addr));
+	auto *tar = FileSystem::Tar::Parse (ramdisk);*/
 
-	auto *initrd = new FileSystem::Initrd (strdup ("/"), tar);
-
+	auto *initrd = new FileSystem::Initrd ("/");
 	VFS::InitVFS (initrd);
 
-	int file = open ("/greet.txt", O_RDONLY);
+	mkdir ("/boot", 0777);
+	mkdir ("/dev", 0777);
+
+	struct stat bootst;
+	struct stat devst;
+
+	stat ("/boot", &bootst);
+	stat ("/dev", &devst);
+
+	assert (S_ISDIR (bootst.st_mode));
+	assert (S_ISDIR (devst.st_mode));
+
+	/*int file = open ("/greet.txt", O_RDONLY);
 
 	if (file == -1)
 		puts ("Could not open /greet.txt");
@@ -78,21 +92,16 @@ void kmain (void) {
 		printf ("/greet.txt open in fd: %d\n", file);
 
 	struct stat st;
+	stat ("/", &st);
+	assert (S_ISDIR(st.st_mode));
+	stat ("/greet.txt", &st);
+	assert (S_ISREG(st.st_mode));
 
-	if (stat ("/", &st) != -1) {
-		if (S_ISDIR(st.st_mode))
-			printf ("/ is a directory\n");
-		else
-			printf ("/ is not a directory???\n");
-	}
+	assert (false);*/
 
-	if (stat ("/greet.txt", &st) != -1) {
-		if (S_ISREG(st.st_mode))
-			printf ("/greet.txt is a file\n");
-		else
-			printf ("/greet.txt is not a file???\n");
-	}
-
+	/*DIR *root = opendir ("/");
+	struct dirent *et = readdir (root);
+	printf ("First file name: %s\n", et->name);*/
 
 #if _GRAPHICS == 1
 	Desktop *desktop = new Desktop (new VGAContext (3, "vga"));
