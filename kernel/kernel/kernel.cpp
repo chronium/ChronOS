@@ -108,7 +108,7 @@ void kmain (void) {
 	printf ("First file name: %s\n", et->name);*/
 
 #if _GRAPHICS == 1
-	Desktop *desktop = new Desktop (new VGAContext (3, "vga"));
+	Desktop *desktop = new Desktop (new VGAContext ("vga"));
 	desktop->CreateWindow (10, 10, 80, 50);
 	desktop->CreateWindow (100, 50, 50, 60);
 	desktop->CreateWindow (200, 100, 50, 50);
