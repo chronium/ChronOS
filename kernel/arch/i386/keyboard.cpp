@@ -114,6 +114,9 @@ static bool keyboard_get_key (int key, struct KeyInfo *keyInfo) {
 	keyInfo->Char = '\0';
 	if (key == 0xE035 || key == 0xE01C) key ^= 0xE000;
 	switch (key) {
+		case KEY_BACKSPACE:
+				keyInfo->Char = '\b';
+			break;
 		default:
 			if (key <= 0x53) {
 				keyInfo->Char = (((kb_modifiers & KM_SHIFT) != 0) ^ ((kb_led_status & LED_CAPS_LOCK) != 0) ? chsU : chsL)[key];
@@ -165,7 +168,6 @@ static void handle_scancode(int key, bool released) {
 						enqueue_key (keyInfo);
 					}
 				}
-				keyboard_update_leds ();
 			}
 			break;
 	}
@@ -228,20 +230,35 @@ static void keyboard_handler (regs_t *ctx) {
 }
 
 void init_keyboard () {
-  	keyboard_set_leds (LED_NUM_LOCK);
-
 	request_irq (1, keyboard_handler);
 }
 
 int getc () {
-#if defined (__is_chronos_kernel)
 	struct KeyInfo k = keyboard_read_key ();
 	int ch = k.Char;
-	if (ch != 0)
+	if (ch != 0 && ch != '\b')
 		putchar (ch);
 	return ch;
-#else
-	// TODO: Implement syscall.
-#endif
-	return 0;
+}
+
+char *gets () {
+	char *str = new char [256];
+	memset (str, 0, 256);
+	char *init = str;
+	char c;
+	do {
+		if (c != 0) {
+			if (c == '\b') {
+				if (str - init > 0) {
+					*(--str) = '\0';
+					putchar ('\b');
+				}
+			}
+			else
+				*(str++) = c;
+		}
+	} while ((c = getc ()) != '\n');
+	*(str++) = c;
+
+	return init;
 }

@@ -18,6 +18,7 @@ struct KeyInfo keyboard_read_key ();
 bool keyboard_try_read_key ();
 
 int getc ();
+char *gets ();
 
 enum Keys {
 	KEY_UNKNOWN = 0x00,

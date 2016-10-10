@@ -4,6 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include <stdio.h>
+
 #include <arch/i386/portio.h>
 #include <kernel/video.h>
 #include <kernel/tty.h>
@@ -60,6 +62,9 @@ void Terminal::PutC (char c) {
 			break;
 		case '\r':
 			this->x = 0;
+			break;
+		case '\b':
+			this->PutEntry (' ', --this->x, this->y);
 			break;
 		default:
 			if (this->x == this->GetWidth ())

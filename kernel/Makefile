@@ -44,6 +44,7 @@ kernel/fs/mountpoint.o \
 kernel/fs/initrd.o \
 kernel/fs/filesystem.o \
 kernel/fs/devfs.o \
+kernel/rescue_shell.o \
 kernel/kernel.o
 
 CRTI_OBJ:=$(ARCHDIR)/asm/crti.o
