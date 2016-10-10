@@ -51,7 +51,7 @@ iso: kernel sysroot
 	@ cp grub/grub.cfg isodir/boot/grub/grub.cfg
 	@ echo "Generating ISO"
 	@ grub-mkrescue -o chronos.iso isodir > /dev/null 2>&1
-	@ echo "Done\n"
+	@ echo "Done"
 
 sysroot:
 	@ echo "Preparing $@"
@@ -60,15 +60,15 @@ sysroot:
 	@ mkdir -p isodir/boot/grub
 	@ cp initrd/* sysroot/
 	@ cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
-	@ echo "Done\n"
+	@ echo "Done"
 
 kernel: headers
 	@ echo "Setting up $@"
 	@ for PROJECT in $(PROJECTS); do \
-		echo "\t→$$PROJECT" ; \
+		echo "    →$$PROJECT" ; \
 		make -s -C $$PROJECT install ; \
 	done
-	@ echo "Done\n"
+	@ echo "Done"
 
 lib: headers
 	make -s -C libc
@@ -77,12 +77,14 @@ headers:
 	@echo "Setting up $@"
 	@ mkdir -p sysroot
 	@ for PROJECT in $(SYSTEM_HEADER_PROJECTS); do \
-		echo "\t→$$PROJECT" ; \
+		echo "    →$$PROJECT" ; \
 		make -s -C $$PROJECT install-headers ; \
 	done
-	@ echo "Done\n"
+	@ echo "Done"
 
 run: all qemu
+
+run-kvm: all qemu-kvm
 
 run-curses: all qemu-curses
 
@@ -92,14 +94,17 @@ qemu-curses:
 qemu:
 	qemu-system-$(ARCH) -cdrom chronos.iso -serial stdio
 
+qemu-kvm:
+	qemu-system-$(ARCH) -cdrom chronos.iso -serial stdio -enable-kvm
+
 clean:
 	@ echo "Cleaning"
 	@ for PROJECT in $(PROJECTS); do \
-		echo "\t→$$PROJECT" ; \
+		echo "    →$$PROJECT" ; \
 		make -s -C $$PROJECT clean ; \
 	done
-	@ echo "\t→root project"
+	@ echo "    →root project"
 	@ rm -rf sysroot
 	@ rm -rf isodir
 	@ rm -rf chronos.iso
-	@ echo "Done\n"
+	@ echo "Done"
