@@ -242,23 +242,23 @@ int getc () {
 }
 
 char *gets () {
-	char *str = new char [256];
-	memset (str, 0, 256);
-	char *init = str;
-	char c;
-	do {
-		if (c != 0) {
-			if (c == '\b') {
-				if (str - init > 0) {
-					*(--str) = '\0';
-					putchar ('\b');
-				}
-			}
-			else
-				*(str++) = c;
-		}
-	} while ((c = getc ()) != '\n');
-	*(str++) = c;
+    char *str = new char [256];
+    memset (str, 0, 256);
+    char *init = str;
+    char c;
+    do {
+        if (c != 0) {
+            if (c == '\b') {
+                if (str - init > 0) {
+                    *(--str) = '\0';
+                    putchar ('\b');
+                }
+            }
+            else
+                *(str++) = c;
+        }
+    } while ((c = getc ()) != '\n');
+    *(str++) = c;
 
-	return init;
+    return init;
 }
