@@ -62,6 +62,16 @@ void *get_phyiscal_addr (struct page_directory *pdir, void *vaddr) {
   return NULL;
 }
 
+struct page_directory *create_new_page () {
+  struct page_directory *dir = (struct page_directory *) malloc_pa (sizeof (struct page_directory));
+  memset (dir, 0, sizeof (struct page_directory));
+
+  for (uintptr_t ptr = 0; ptr < IDENTITY_MAP_END; ptr += 0x1000)
+    page_alloc (dir, ptr, ptr, 0, 0);
+
+  return dir;
+}
+
 void init_paging () {
   kernel_directory = (struct page_directory *) malloc_pa (sizeof (struct page_directory));
   memset (kernel_directory, 0, sizeof (struct page_directory));

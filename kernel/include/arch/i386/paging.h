@@ -24,6 +24,8 @@ struct page_directory {
   uint32_t            physical_addr;
 };
 
+extern struct page_directory *kernel_directory;
+
 void init_paging ();
 
 void page_alloc (struct page_directory *, uint32_t, uint32_t, bool, bool);

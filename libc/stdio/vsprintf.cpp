@@ -53,7 +53,7 @@ static void print_hex (unsigned int value, unsigned int width, char *buf, int *p
 
   i = (int) n_width;
   while (i-- > 0) {
-    buf[*ptr] = "0123456789abcdef"[(value >> (i * 4)) & 0x0F];
+    buf[*ptr] = "0123456789ABCDEF"[(value >> (i * 4)) & 0x0F];
     *ptr += 1;
   }
 }

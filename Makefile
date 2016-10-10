@@ -7,7 +7,7 @@ fi)
 export HOSTARCH:=$(ARCH)
 
 SYSTEM_HEADER_PROJECTS:=libc kernel
-PROJECTS:=$(SYSTEM_HEADER_PROJECTS)
+PROJECTS:=$(SYSTEM_HEADER_PROJECTS) test
 
 export MAKE:=$(MAKE:-make)
 
@@ -40,11 +40,11 @@ export CPPFLAGS:=$(shell if echo $(HOST) | grep -Eq -- '-elf($$|-)'; then \
 fi)
 export DESTDIR:=$(PWD)/sysroot
 
-.PHONY: all iso run clean headers prep sysroot headers lib
+.PHONY: all iso run clean projects prep sysroot headers lib
 
 all: iso
 
-iso: kernel sysroot
+iso: projects sysroot
 	@ echo "Creating ISO"
 	@ echo "Building initrd"
 	@ tar --create --file isodir/boot/initrd.tar --directory=sysroot $(shell ls sysroot)
@@ -58,11 +58,11 @@ sysroot:
 	@ mkdir -p isodir
 	@ mkdir -p isodir/boot
 	@ mkdir -p isodir/boot/grub
-	@ cp initrd/* sysroot/
+	@ cp -rf sysroot/* isodir/
 	@ cp sysroot/boot/chronos.kernel isodir/boot/chronos.kernel
 	@ echo "Done\n"
 
-kernel: headers
+projects: headers
 	@ echo "Setting up $@"
 	@ for PROJECT in $(PROJECTS); do \
 		echo "\t→$$PROJECT" ; \
