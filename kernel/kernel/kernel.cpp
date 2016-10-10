@@ -9,6 +9,7 @@
 
 #include <fcntl.h>
 #include <dirent.h>
+#include <initializer_list.h>
 
 #include <kernel/assert.h>
 
