@@ -35,6 +35,7 @@ void Terminal::PutEntry (char c) {
 
 void Terminal::Scroll () {
 	memcpy (this->GetAddress (), (void *) (this->GetAddress () + this->GetWidth () * 2), this->GetWidth () * (this->GetHeight () - 1) * 2);
+	memset (this->GetAddress () + this->GetWidth () * (this->GetHeight () - 1) * 2, 0, this->GetWidth () * 2);
 }
 
 void Terminal::Newline () {
